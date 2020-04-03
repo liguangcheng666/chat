@@ -1,0 +1,75 @@
+<?php
+// 连接数据库、设置字符集
+include 'config.php';
+
+
+$IP = $_SERVER["REMOTE_ADDR"];//获取IP并保存到变量IP中
+$url = "http://freeapi.ipip.net/".$IP;
+$str = file_get_contents($url);
+$ipinfo=json_decode($str);
+
+$address = $ipinfo[2];
+
+$sender = $address."&nbsp;".$IP;
+
+if (!isset($_COOKIE['sender'])) {
+	setcookie('sender',$sender,time()+30*24*60*60);
+}
+
+
+// 创建预处理语句
+$stmt=mysqli_stmt_init($link);
+
+$ymd = date("Y-m-d");
+
+//编写预处理查询sql语句
+$sql = "select id from visitor where time > ? and visitor = ?";
+
+
+
+if (mysqli_stmt_prepare($stmt,$sql))
+{
+   
+    // 绑定参数
+    mysqli_stmt_bind_param($stmt,"ss",$ymd,$sender);
+    
+    // 执行查询
+    mysqli_stmt_execute($stmt);
+    
+    // 从准备好的语句获取结果集
+    $query = mysqli_stmt_get_result($stmt);
+    
+    // 获取值
+    $result = mysqli_fetch_assoc($query);
+
+	if (!$result) {
+		//编写预处理插入sql语句
+		$sql = "insert into visitor values (null,?,now())";
+		//预处理SQL模板
+		$stmt = mysqli_prepare($link, $sql);
+		// 参数绑定，并为已经绑定的变量赋值
+		mysqli_stmt_bind_param($stmt, 's', $sender);
+
+		// 执行预处理
+		$result = mysqli_stmt_execute($stmt);
+		if ($result) {
+			echo "记录成功";
+		}else{
+			echo "记录失败";
+		}
+	}else{
+		echo "已经记录";
+	}
+    
+    // 关闭预处理语句
+    mysqli_stmt_close($stmt);
+}else{
+	echo "预处理查询sql语句错误";
+}
+//关闭连接
+mysqli_close($link);
+
+
+
+
+?>
