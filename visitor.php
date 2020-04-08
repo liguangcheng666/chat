@@ -39,7 +39,7 @@ if (mysqli_stmt_prepare($stmt,$sql))
 {
    
     // 绑定参数
-    mysqli_stmt_bind_param($stmt,"sss",$ymd,$userName);
+    mysqli_stmt_bind_param($stmt,"ss",$ymd,$userName);
     
     // 执行查询
     mysqli_stmt_execute($stmt);
