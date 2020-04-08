@@ -37,7 +37,7 @@ if (mysqli_stmt_prepare($stmt,$sql))
 
 	if (!$result) {
 			
-		if ($_COOKIE['userName'] != null) {
+		if (isset($_COOKIE['userName']) && !empty($_COOKIE['userName'])) {
 
 				$msg = $_POST['msg'];
 				// 所有字符都转成HTML格式

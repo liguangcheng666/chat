@@ -3,17 +3,23 @@
 include 'config.php';
 
 
-$IP = $_SERVER["REMOTE_ADDR"];//获取IP并保存到变量IP中
-$url = "http://freeapi.ipip.net/".$IP;
-$str = file_get_contents($url);
-$ipinfo=json_decode($str);
-
-$address = $ipinfo[2];
-
-$sender = $address."&nbsp;".$IP;
-
 if (!isset($_COOKIE['sender'])) {
+	$IP = $_SERVER["REMOTE_ADDR"];//获取IP并保存到变量IP中
+	$url = "http://freeapi.ipip.net/".$IP;
+	$str = file_get_contents($url);
+	$ipinfo=json_decode($str);
+
+	$address = $ipinfo[2];
+
+	$sender = $address."&nbsp;".$IP;
 	setcookie('sender',$sender,time()+30*24*60*60);
+}
+
+
+if(isset($_COOKIE['userName']) && !empty($_COOKIE['userName'])){
+	$userName = $_COOKIE['userName'];
+}else{
+	$userName = null;
 }
 
 
@@ -23,7 +29,7 @@ $stmt=mysqli_stmt_init($link);
 $ymd = date("Y-m-d");
 
 //编写预处理查询sql语句
-$sql = "select id from visitor where time > ? and visitor = ?";
+$sql = "select id from visitor where time > ? and username = ?";
 
 
 
@@ -31,7 +37,7 @@ if (mysqli_stmt_prepare($stmt,$sql))
 {
    
     // 绑定参数
-    mysqli_stmt_bind_param($stmt,"ss",$ymd,$sender);
+    mysqli_stmt_bind_param($stmt,"ss",$ymd,$userName);
     
     // 执行查询
     mysqli_stmt_execute($stmt);
@@ -44,11 +50,11 @@ if (mysqli_stmt_prepare($stmt,$sql))
 
 	if (!$result) {
 		//编写预处理插入sql语句
-		$sql = "insert into visitor values (null,?,now())";
+		$sql = "insert into visitor values (null,?,?,now())";
 		//预处理SQL模板
 		$stmt = mysqli_prepare($link, $sql);
 		// 参数绑定，并为已经绑定的变量赋值
-		mysqli_stmt_bind_param($stmt, 's', $sender);
+		mysqli_stmt_bind_param($stmt, 'ss', $userName, $sender);
 
 		// 执行预处理
 		$result = mysqli_stmt_execute($stmt);

@@ -1,0 +1,1 @@
+php D:\Apa\Apache\Apache24\htdocs\Ajax\02\talk\server.php

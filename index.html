@@ -5,6 +5,7 @@
 		<title>聊天室</title>
 		<link rel="icon" href="icons/大象.ico" type="images/x-ico" />
 		<style type="text/css">
+
 			* {
 				margin: 0;
 				padding: 0;
@@ -15,7 +16,7 @@
 				width: 1200px;
 				height: 2200px;
 				background: #FDE6E0;
-				margin:0 auto;
+				margin: 0 auto;
 				position: relative;
 			}
 
@@ -40,11 +41,11 @@
 				position: absolute;
 				left: 45px;
 				bottom: 20px;
-				font-size: 20px; 
+				font-size: 20px;
 			}
 
 			#control select {
-				font-size: 20px; 
+				font-size: 20px;
 			}
 
 			select,
@@ -56,7 +57,6 @@
 				font-size: 40px;
 				width: 855px;
 				height: 125px;
-				margin-top: 5px;
 				border: 0;
 			}
 
@@ -93,14 +93,13 @@
 				width: 300px;
 				height: 125px;
 				background-color: #FFF2E2;
-				/*background-color: rgba(0,0,0,0);*/
 				font-size: 45px;
 				position: absolute;
 				left: 855px;
 				bottom: 37px;
 			}
 
-			#sendresult{
+			#sendresult {
 				position: absolute;
 				font-size: 20px;
 				left: 855px;
@@ -113,19 +112,19 @@
 			#images {
 				font-size: 20px;
 				position: relative;
-				bottom: 5px; 
+				bottom: 5px;
 			}
 
 			#image {
 				background-color: #FFF2E2;
 				width: 755.4px;
-				font-size: 20px; 
+				font-size: 20px;
 			}
 
 			#ymd {
 				/*设置字体大小为35px*/
 				font-size: 35px;
-				margin-bottom: 20px; 
+				margin-bottom: 20px;
 			}
 
 			#user {
@@ -147,26 +146,26 @@
 				right: 65px;
 			}
 
-			#bottom{
+			#bottom {
 				width: 1200px;
-				margin:0 auto;
+				margin: 0 auto;
 				display: flex;
 				justify-content: space-around;
 			}
 
-			#bottom a{
+			#bottom a {
 				color: #000;
-				text-decoration:none;
+				text-decoration: none;
 			}
 
 			/*弹性布局封装*/
-			.flex{
+			.flex {
 				/*弹性布局*/
 				display: flex;
 				/*主轴对齐*/
 				justify-content: center;
 				/*交叉轴对齐*/
-				align-items: center;	
+				align-items: center;
 			}
 
 			p {
@@ -185,10 +184,23 @@
 		<script type="text/javascript">
 			//通过ajax无刷新方式获得最新的聊天内容
 			var maxID = 0;
+			// websocket
+	    	var ws=false,n=false;
+	    	var send = 'type=add&ming=';
+			var str;
+			// users
+			var users;
 			// 图片数量
 			var img_num;
 			// 图片
 			var image;
+
+			// socket
+			function socket() {
+		 		var url='ws://192.168.0.106:8000';
+		        //创建socket，注意URL的格式：ws://ip:端口
+		        ws = new WebSocket(url);
+			}
 
 			function showmessage() {
 				var xhr = new XMLHttpRequest();
@@ -225,12 +237,24 @@
 							// showmsg.scrollTop = 20000;
 							//卷起高度等于div本身高度，就可以使得滚动条始终在最下边显示
 							showmsg.scrollTop = showmsg.scrollHeight;
-						}else{
+						} else {
 							// lazyload
 							img_num = document.getElementsByTagName('img').length;
-						    image = document.getElementsByTagName("img");
+							image = document.getElementsByTagName("img");
 							// 页面载入完毕加载可视区域内的图片
-					    	lazyload();
+							lazyload();
+							//停止轮询
+							clearInterval(showmessageFunc);
+							// 设置websocket参数
+	        				n=document.getElementById("user").innerText.substring(0,30);
+							// 启动websocket				
+	        				websocket();
+							// 消息展示区域 
+							var showmsg = document.getElementById('show_msg');
+							setTimeout(function(){
+								//卷起高度等于div本身高度，就可以使得滚动条始终在最下边显示
+								showmsg.scrollTop = showmsg.scrollHeight;
+							},500);
 						}
 
 
@@ -390,7 +414,7 @@
 							</select>
 
 							<br />
-							<textarea id="msg" name="msg" autofocus="autofocus" ></textarea>
+							<textarea id="msg" name="msg" autofocus="autofocus"></textarea>
 							<input type="button" id="button1" value="发送消息" onclick="sendmsg()" />
 							<span id="sendresult" class='flex'></span>
 
@@ -404,7 +428,8 @@
 			<h3 id="ymd" class="flex"></h3>
 			<div id="weather">
 				<iframe allowtransparency="true" frameborder="0" width="300" height="460" scrolling="no" src="//tianqi.2345.com/plugin/widget/index.htm?s=2&z=1&t=1&v=1&d=5&bd=0&k=&f=&ltf=009944&htf=cc0000&q=1&e=1&a=1&c=54511&w=300&h=500&align=center"></iframe>
-				<iframe src="https://music.163.com/outchain/player?type=0&amp;id=865772037&amp;auto=0" width="300" height="1150" frameborder="0" marginwidth="0" marginheight="0"></iframe>
+				<iframe src="https://music.163.com/outchain/player?type=0&amp;id=865772037&amp;auto=0" width="300" height="1150"
+				 frameborder="0" marginwidth="0" marginheight="0"></iframe>
 
 			</div>
 			<div id="time" class="flex">
@@ -431,7 +456,7 @@
 <script type="text/javascript">
 	/*
     生成用户cookie
- */
+ 	*/
 	function visitor() {
 		var xhr = new XMLHttpRequest();
 
@@ -441,11 +466,10 @@
 	/*
 		写cookies方法
 	 */
-	function setCookie(name,value,time)
-	{
-	    // 设置cookie
+	function setCookie(name, value, time) {
+		// 设置cookie
 		var obj = new Date();
-		obj.setTime(obj.getTime() + time*1000);//过期时间
+		obj.setTime(obj.getTime() + time * 1000); //过期时间
 		document.cookie = name + "=" + value + ";expires=" + obj.toGMTString();
 	}
 	/*
@@ -469,44 +493,45 @@
 	function queryUser() {
 		var sender = document.cookie.indexOf("sender");
 		var userName = document.cookie.indexOf("userName");
-		if (sender+1) {
-			if (!(userName+1)) {
-	    		var num = sender+7;
-	    		// console.log(num);
-				var user = decodeURIComponent(document.cookie.slice(num)).replace("&nbsp;"," ");
+		if (sender + 1) {
+			if (!(userName + 1)) {
+				var num = sender + 7;
+				// console.log(num);
+				var user = decodeURIComponent(document.cookie.slice(num)).replace("&nbsp;", " ");
 				var end = user.indexOf(";");
-				if (end+1) {
-					var user = user.slice(0,end);
-				}	
-	    		var userName = prompt("请输入您的昵称",user);
-	    		if (userName) {
-	    			
-		    		// 设置cookie
-				    setCookie('userName',userName,30*24*60*60);
+				if (end + 1) {
+					var user = user.slice(0, end);
+				}
+				var userName = prompt("请输入您的昵称", user);
+				if (userName) {
 
-	    			document.getElementById("user").innerHTML = userName;
-	    		}else{
-			        var num = '';
-			        for(var i=0;i<3;i++)
-			        {
-			            num+=Math.floor(Math.random()*10);
-			        }
-	    			var userName = "匿名者"+num;
-	    			
-		    		// 设置cookie
-				    setCookie('userName',userName,24*60*60);
+					// 限制网名长度
+					userName=userName.substring(0,30);
+					// 设置cookie
+					setCookie('userName', userName, 30 * 24 * 60 * 60);
 
-	    			document.getElementById("user").innerHTML = userName;
-	    		}
-			}else{
-	    		var num = userName+9;
-	    		// console.log(num);
-				var user = decodeURIComponent(document.cookie.slice(num)).replace("&nbsp;"," ");
+					document.getElementById("user").innerHTML = userName;
+				} else {
+					var num = '';
+					for (var i = 0; i < 3; i++) {
+						num += Math.floor(Math.random() * 10);
+					}
+					var userName = "匿名者" + num;
+
+					// 设置cookie
+					setCookie('userName', userName, 24 * 60 * 60);
+
+					document.getElementById("user").innerHTML = userName;
+				}
+			} else {
+				var num = userName + 9;
+				// console.log(num);
+				var user = decodeURIComponent(document.cookie.slice(num)).replace("&nbsp;", " ");
 				var end = user.indexOf(";");
-				if (end+1) {
-					var user = user.slice(0,end);
-				}	
-	    		document.getElementById("user").innerHTML = user;			
+				if (end + 1) {
+					var user = user.slice(0, end);
+				}
+				document.getElementById("user").innerHTML = user;
 			}
 			//停止
 			clearInterval(queryUserFunc);
@@ -516,18 +541,20 @@
 		修改网名
 	 */
 	var btn = document.getElementById('user');
-    btn.onclick = function(){
-    	var user = document.getElementById("user").innerText;
-    	var userName = prompt("修改您的昵称",user);
-    	if (userName) {
-    		// 设置cookie
-		    setCookie('userName',userName,30*24*60*60);
+	btn.onclick = function() {
+		var user = document.getElementById("user").innerText;
+		var userName = prompt("修改您的昵称", user);
+		if (userName) {
+			// 限制网名长度
+			userName=userName.substring(0,30);
+			// 设置cookie
+			setCookie('userName', userName, 30 * 24 * 60 * 60);
 
-        	// console.log(userName);
-        	//显示用户名
+			// console.log(userName);
+			//显示用户名
 			document.getElementById("user").innerHTML = userName;
-    	}    
-    }
+		}
+	}
 	/*
 	    显示时间
 	 */
@@ -546,10 +573,10 @@
 	    发送消息
 	 */
 	function sendmsg() {
-		if (!(document.cookie.indexOf("sendmsg")+1)) {
+		if (!(document.cookie.indexOf("sendmsg") + 1)) {
 
-    		// 设置cookie
-		    setCookie('sendmsg','sendmsg',2);//过期时间 2 秒
+			// 设置cookie
+			setCookie('sendmsg', 'sendmsg', 2); //过期时间 2 秒
 
 			var fm = document.getElementsByTagName('form')[0];
 			var fd = new FormData(fm); //收集数据
@@ -568,6 +595,9 @@
 						document.getElementById('msg').value = ""; //消息
 						document.getElementById('image').value = ""; //图片
 					}
+					if (res == '发送成功') {
+						ws.send('nr=send&key=all');
+					}
 					//3s后使得发表留言的消息消失
 					setTimeout("hideresult()", 3000);
 				}
@@ -580,87 +610,157 @@
 	function hideresult() {
 		document.getElementById('sendresult').innerHTML = "";
 	}
-	// lazyload
-    // 存储图片加载到的位置，避免每次都从第一张图片开始遍历
-    var n = 0; 
-    document.getElementById('show_msg').onscroll = lazyloadFun;
-    function lazyloadFun(){
-    	n = 0;
-    	lazyload();
-    }
-    function lazyload() {
-        for (var i = n; i < img_num; i++) {
-        	var top = image[i].getBoundingClientRect().top;
-            if (top > 100) {
-                if (image[i].getAttribute("src") == "icons/load.png") {
-			        image[i].src = image[i].getAttribute("data-src");
-			        var showmsg = document.getElementById('show_msg');
-                }
-            }
-            n = i + 1;
-        }
-    }
- 
-		    
+
+	/*
+	    lazyload
+	 */
+	// 存储图片加载到的位置，避免每次都从第一张图片开始遍历
+	var n = 0;
+	document.getElementById('show_msg').onscroll = lazyloadFun;
+
+	function lazyloadFun() {
+		n = 0;
+		lazyload();
+	}
+
+	function lazyload() {
+		for (var i = n; i < img_num; i++) {
+			var top = image[i].getBoundingClientRect().top;
+			if (top > 100) {
+				if (image[i].getAttribute("src") == "icons/load.png") {
+					image[i].src = image[i].getAttribute("data-src");
+					var showmsg = document.getElementById('show_msg');
+				}
+			}
+			n = i + 1;
+		}
+	}
+
+	/*
+	    WebSocket
+	 */
+	 function websocket(){
+	 		// 连接websocket
+	 		socket();
+	        //握手监听函数
+	        ws.onopen=function(){
+	            //状态为1证明握手成功，然后把client自定义的名字发送过去
+	            if(ws.readyState==1){
+	                ws.send(send+n);
+	            }
+	        }
+	    //错误返回信息函数
+	    ws.onerror = function(){
+	        console.log("error");
+	    };
+	    //监听服务器端推送的消息
+	    ws.onmessage = function (msg){
+			var showmsg = document.getElementById('show_msg');
+	        // JSON.parse() 方法用于将一个 JSON 字符串转换为对象。
+	        str =  JSON.parse(msg.data);
+	        if (typeof(str.users) != 'undefined') {
+				users = str.users;
+			}
+        	for(var i = 0;i < users.length;i++){
+        		if(typeof(str.nrong) != 'undefined' && users[i]['code'] == str.nrong){
+        			//插入用户退出提示语
+					var	s = "<p style='color:#006400;font-size:35px;text-align:center;' class='flex'>"+users[i]['name']+" 退出 "+str.time+"</p>";
+					showmsg.innerHTML += s;
+        		}
+        	}
+
+	        //插入用户加入提示语
+			var	s = "<p style='color:#D2691E;font-size:35px;text-align:center;' class='flex'>欢迎 "+str.name+" 加入 "+str.time+"</p>";
+			if (typeof(str.name) != 'undefined') {
+				showmsg.innerHTML += s;
+				var arr = {'code':str.code,'name':str.name};
+				users.push(arr);
+				//生成用户信息
+				visitor();
+				//显示用户数量
+				number();
+			}
+
+			//数据库拉去消息
+			if (str.nrong == 'send') {
+				showmessage();
+				//1s后执行lazyload方法
+				setTimeout(function(){ 
+					// lazyload
+					img_num = document.getElementsByTagName('img').length;
+					image = document.getElementsByTagName("img");
+					// 页面载入完毕加载可视区域内的图片
+					lazyload(); 
+				}, 500);
+				setTimeout(function(){
+					//卷起高度等于div本身高度，就可以使得滚动条始终在最下边显示
+					showmsg.scrollTop = showmsg.scrollHeight;
+				},1000);
+			}
+			//卷起高度等于div本身高度，就可以使得滚动条始终在最下边显示
+			showmsg.scrollTop = showmsg.scrollHeight;
+	    }
+	     
+	    //断开WebSocket连接
+	    ws.onclose = function(){
+	    	send = null,n = null;
+		 	websocket(); 
+	    }
+	 }
+
+
 
 	window.onload = function() {
 		//获得最新聊天内容
 		//制作轮询（推技术）
-		setInterval("showmessage()", 2000); //制作轮询（推技术）
+		showmessageFunc = setInterval("showmessage()", 2000);
 		//生成用户信息
 		visitor();
-		//刷新用户数量
-		setInterval("number()", 2000);
 		//显示时间
 		setInterval("myTimer()", 1000);
 		//显示用户名
 		queryUserFunc = setInterval("queryUser()", 500);
+		
 	}
-
 </script>
 
 <!-- 按键 -->
 <script type="text/javascript">
-	
-
-
-    var isEnter = false;
-    var isCtrl = false;
-	document.onkeydown=function(event){
-	  var e = event || window.event || arguments.callee.caller.arguments[0];
-	  var key = e.keyCode;
-		  if(key==13){ 
-		    	isEnter = true;
-		   }
-		  if(key==17){ 
-		    	isCtrl = true;
-		   }
-		   if (isEnter && isCtrl) {
-		   		sendmsg();
-		   }
-	}; 
-	document.onkeyup=function(event){
-	  var e = event || window.event || arguments.callee.caller.arguments[0];
-	  var key = e.keyCode;
-		  if(key==13){ 
-		    	isEnter = false;
-		   }
-		  if(key==17){ 
-		    	isCtrl = false;
-		   }
-	}; 
-
+	var isEnter = false;
+	var isCtrl = false;
+	document.onkeydown = function(event) {
+		var e = event || window.event || arguments.callee.caller.arguments[0];
+		var key = e.keyCode;
+		if (key == 13) {
+			isEnter = true;
+		}
+		if (key == 17) {
+			isCtrl = true;
+		}
+		if (isEnter && isCtrl) {
+			sendmsg();
+		}
+	};
+	document.onkeyup = function(event) {
+		var e = event || window.event || arguments.callee.caller.arguments[0];
+		var key = e.keyCode;
+		if (key == 13) {
+			isEnter = false;
+		}
+		if (key == 17) {
+			isCtrl = false;
+		}
+	};
 </script>
 
 
 <!-- 执行插入 -->
 <script type="text/JavaScript">
-	    var selectId = document.getElementById("biaoqing");//获取ID
-    selectId.onchange = function()//触发事件
-    {
-        var result = selectId.options[selectId.selectedIndex].innerHTML;//获取选中文本
+	var selectId = document.getElementById("biaoqing");//获取ID
+    selectId.onchange = function()//触发事件
+    {
+        var result = selectId.options[selectId.selectedIndex].innerHTML;//获取选中文本
         // console.log(result);
         insertAtCursor(document.getElementById('msg'),result);
-    }
+    }
 </script>
-

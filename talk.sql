@@ -1,25 +1,37 @@
-#建表语句
+/*
+ 建表语句
+*/
 
-#信息表
-CREATE TABLE `message` (
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- 消息表
+-- ----------------------------
+DROP TABLE IF EXISTS `message`;
+CREATE TABLE `message`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `sender` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `msg` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `color` varchar(7) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `biaoqing` varchar(4) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `image` varchar(30) DEFAULT NULL,
-  `add_time` varchar(19) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+  `username` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `sender` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `ip` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `msg` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `color` varchar(7) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `biaoqing` varchar(4) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `image` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `add_time` varchar(19) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-
-#访客表
-CREATE TABLE `visitor` (
+-- ----------------------------
+-- 访客表
+-- ----------------------------
+DROP TABLE IF EXISTS `visitor`;
+CREATE TABLE `visitor`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `visitor` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `time` varchar(19) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `username` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `visitor` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `time` varchar(19) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-
-
+SET FOREIGN_KEY_CHECKS = 1;
