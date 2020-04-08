@@ -65,6 +65,12 @@ if (mysqli_stmt_prepare($stmt,$sql))
 						//① 附件的存储位置、附件的名字
 						$path = "./images/";
 						$name = $_FILES['image']['name'];	//原名字
+						// 判断“.”的位置
+						$end = strrchr($name,'.');
+						if (!($end == '.png' || $end == '.jpg' ||  $end == '.jpeg' ||  $end == '.gif' || $end == '.webp')) {
+					           echo "上传失败";
+					           exit();
+						}
 						$truename = $path.$name;
 
 						
