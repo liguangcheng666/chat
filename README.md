@@ -1,4 +1,7 @@
 # chat
+websocket聊天室
+运行地址：http://lgcweb.cn/
+备用地址：http://lgc.jxjt.me/
 
 项目技术介绍
 前端用的是html,css,javascipt
