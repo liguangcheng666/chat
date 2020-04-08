@@ -3,7 +3,7 @@
 include 'config.php';
 
 
-if (!isset($_COOKIE['sender'])) {
+if (!isset($_COOKIE['sender']) && empty($_COOKIE['sender'])) {
 	$IP = $_SERVER["REMOTE_ADDR"];//获取IP并保存到变量IP中
 	$url = "http://freeapi.ipip.net/".$IP;
 	$str = file_get_contents($url);
@@ -13,6 +13,8 @@ if (!isset($_COOKIE['sender'])) {
 
 	$sender = $address."&nbsp;".$IP;
 	setcookie('sender',$sender,time()+30*24*60*60);
+}else{
+	$sender = $_COOKIE['sender'];
 }
 
 
@@ -37,7 +39,7 @@ if (mysqli_stmt_prepare($stmt,$sql))
 {
    
     // 绑定参数
-    mysqli_stmt_bind_param($stmt,"ss",$ymd,$userName);
+    mysqli_stmt_bind_param($stmt,"sss",$ymd,$userName);
     
     // 执行查询
     mysqli_stmt_execute($stmt);
@@ -48,7 +50,7 @@ if (mysqli_stmt_prepare($stmt,$sql))
     // 获取值
     $result = mysqli_fetch_assoc($query);
 
-	if (!$result) {
+	if (!$result && !empty($userName) && !empty($sender)) {
 		//编写预处理插入sql语句
 		$sql = "insert into visitor values (null,?,?,now())";
 		//预处理SQL模板
