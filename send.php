@@ -41,9 +41,7 @@ if (mysqli_stmt_prepare($stmt,$sql))
 
 				$msg = $_POST['msg'];
 				// 所有字符都转成HTML格式
-				$msg = htmlentities($msg);
-				// 单双引号、反斜线及NULL加上反斜线转义	
-				$msg = addslashes($msg);
+				$msg = htmlentities($msg,ENT_QUOTES);
 				//将$msg变量中的换行字符"chr(13)"替换为html的换行符"<br>"
 				$msg=str_replace(chr(13),'<br>',$msg);
 				//将$msg变量中的空格字符"chr(32)"替换为html的换行符"&nbsp;"
@@ -108,6 +106,8 @@ if (mysqli_stmt_prepare($stmt,$sql))
 
 					$sender = $_COOKIE['sender'];
 					$userName = $_COOKIE['userName'];
+					// 所有字符都转成HTML格式
+					$userName = htmlentities($userName,ENT_QUOTES);
 
 					$color = $_POST['color'];
 					$biaoqing = $_POST['biaoqing'];
