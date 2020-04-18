@@ -5,12 +5,10 @@ include 'config.php';
 
 if (!isset($_COOKIE['sender']) && empty($_COOKIE['sender'])) {
 	$IP = $_SERVER["REMOTE_ADDR"];//获取IP并保存到变量IP中
-	$url = "http://freeapi.ipip.net/".$IP;
+	$url = 'http://ip-api.com/json/'.$IP.'?lang=zh-CN';
 	$str = file_get_contents($url);
-	$ipinfo=json_decode($str);
-
-	$address = $ipinfo[2];
-
+	$ipinfo=(array)json_decode($str);
+	$address = $ipinfo['city'];
 	$sender = $address."&nbsp;".$IP;
 	setcookie('sender',$sender,time()+30*24*60*60);
 	exit();
