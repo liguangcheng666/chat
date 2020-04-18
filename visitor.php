@@ -13,6 +13,7 @@ if (!isset($_COOKIE['sender']) && empty($_COOKIE['sender'])) {
 
 	$sender = $address."&nbsp;".$IP;
 	setcookie('sender',$sender,time()+30*24*60*60);
+	exit();
 }else{
 	$sender = $_COOKIE['sender'];
 }
