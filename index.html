@@ -1,457 +1,482 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>聊天室</title>
-		<link rel="icon" href="icons/大象.ico" type="images/x-ico" />
-		<style type="text/css">
 
-			* {
-				margin: 0;
-				padding: 0;
-				border: 0;
+<head>
+	<meta charset="utf-8">
+	<title>聊天室</title>
+	<link rel="icon" href="icons/大象.ico" type="images/x-ico" />
+	<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+			border: 0;
+		}
+
+		#main {
+			width: 1200px;
+			height: 2200px;
+			background: #FDE6E0;
+			margin: 0 auto;
+			position: relative;
+		}
+
+		#left {
+			width: 900px;
+			height: 2000px;
+			background: #CCE8CF;
+			float: left;
+		}
+
+		#content {
+			height: 1979px;
+			padding-top: 1px;
+		}
+
+		#send {
+			height: 220px;
+			background: #DCE2F1;
+		}
+
+		#control {
+			position: absolute;
+			left: 45px;
+			bottom: 20px;
+			font-size: 20px;
+		}
+
+		#control select {
+			font-size: 20px;
+		}
+
+		select,
+		textarea {
+			border: 1px solid gray;
+		}
+
+		#msg {
+			font-size: 40px;
+			width: 855px;
+			height: 125px;
+			border: 0;
+		}
+
+		#content-title {
+			font-family: "楷体";
+			color: green;
+			font-size: 40px;
+			margin: 10px auto;
+		}
+
+		hr {
+			border: 1px solid gray;
+			width: 600px;
+			margin: auto;
+		}
+
+		#show_msg {
+			width: 853px;
+			margin-left: 47px;
+			margin-top: 10px;
+			font-size: 14px;
+			font-weight: bold;
+			height: 1890px;
+			overflow: auto;
+		}
+
+		ul {
+			font-size: 12px;
+			list-style: none;
+			width: 110px;
+		}
+
+		#button1 {
+			width: 300px;
+			height: 125px;
+			background-color: #FFF2E2;
+			font-size: 45px;
+			position: absolute;
+			left: 855px;
+			bottom: 37px;
+		}
+
+		#sendresult {
+			position: absolute;
+			font-size: 20px;
+			left: 855px;
+			bottom: 5px;
+			width: 300px;
+			height: 32px;
+			background-color: #fff;
+		}
+
+		#images {
+			font-size: 20px;
+			position: relative;
+			bottom: 5px;
+		}
+
+		#image {
+			background-color: #FFF2E2;
+			width: 755.4px;
+			font-size: 20px;
+		}
+
+		#ymd {
+			/*设置字体大小为35px*/
+			font-size: 35px;
+			margin-bottom: 20px;
+		}
+
+		#user {
+			/*设置字体大小为35px*/
+			font-size: 35px;
+			height: 150px;
+		}
+
+		#time {
+			/*设置字体大小为40px*/
+			font-size: 40px;
+			margin-left: 900px;
+		}
+
+		#visitor {
+			/*设置字体大小为30px*/
+			font-size: 30px;
+			position: absolute;
+			right: 65px;
+		}
+
+		#bottom {
+			width: 1200px;
+			margin: 0 auto;
+			display: flex;
+			justify-content: space-around;
+		}
+
+		#bottom a {
+			color: #000;
+			text-decoration: none;
+		}
+
+		/*弹性布局封装*/
+		.flex {
+			/*弹性布局*/
+			display: flex;
+			/*主轴对齐*/
+			justify-content: center;
+			/*交叉轴对齐*/
+			align-items: center;
+		}
+
+		p {
+			/*设置字体大小为40px*/
+			font-size: 40px;
+			/*自动换行*/
+			word-wrap: break-word;
+		}
+
+		img {
+			/*限制图片的宽度为835px*/
+			max-width: 835px;
+		}
+
+		.read {
+			width: 280px;
+			height: 100px;
+			font-size: 35px;
+			border-radius: 120px 0px 0px 120px;
+			background-color: #FFF2E2;
+			opacity: 0;
+			transition: all 0.66s;
+			z-index: -1;
+		}
+
+		#read_before{
+			position: absolute;
+			top: 120px;
+			right: 300px;
+		}
+
+		#read_after{
+			position: absolute;
+			bottom: 225px;
+			right: 300px;
+		}
+
+		.now {
+			opacity: 1;
+			z-index: 0;
+			transition: all 0.66s;
+		}
+
+		.now_fast {
+			opacity: 1;
+			z-index: 0;
+		}
+
+	</style>
+
+	<script type="text/javascript">
+		//通过ajax无刷新方式获得最新的聊天内容
+		var maxID = 0,max = 0,move_id = 0;
+		// websocket
+		var ws = false, n = false,send = 'type=add&ming=',str,users;
+		var img_num,image,move,read_before,read_before_id,read_after,read_after_id;
+		// showmsg
+		var showmsg;
+
+		// socket
+		function socket() {
+			var url = 'ws://39.105.0.128:8000';
+			//创建socket，注意URL的格式：ws://ip:端口
+			ws = new WebSocket(url);
+		}
+
+		// msg
+		function msg(msg) {
+			//string--->实体内容
+			eval("var json_info=" + msg);
+
+			//遍历json_info的数组，把内容的信息与页面内容做结合
+			var s = "";
+			for (var i = 0; i < json_info.length; i++) {
+				s += "<p style='color:" + json_info[i].color + "'>";
+				s += json_info[i].username + "&nbsp;";
+				s += json_info[i].biaoqing + "&nbsp;:&nbsp;&nbsp;" + json_info[i].msg;
+				if (json_info[i].image) {
+					// 图片地址
+					var img_url = encodeURI(json_info[i].image);
+					s += "<img src='icons/load.png' data-src='" + img_url + "'>";
+				}
+				s += "</p>";
+				s += "<p style='color:black;font-size: 30px;'>（" + json_info[i].add_time.substr(5, 16) + "）</p>";
+
+				//把已经获得记录的最大id值赋给maxID
+				maxID = json_info[i].id;
 			}
+			showmsg = document.getElementById('show_msg');
+			showmsg.innerHTML += s;
 
-			#main {
-				width: 1200px;
-				height: 2200px;
-				background: #FDE6E0;
-				margin: 0 auto;
-				position: relative;
-			}
+			//设置滚动条卷起高度
+			//卷起高度等于div本身高度，就可以使得滚动条始终在最下边显示
+			showmsg.scrollTop = showmsg.scrollHeight;
+			move = 0;
+		}
 
-			#left {
-				width: 900px;
-				height: 2000px;
-				background: #CCE8CF;
-				float: left;
-			}
-
-			#content {
-				height: 1979px;
-				padding-top: 1px;
-			}
-
-			#send {
-				height: 220px;
-				background: #DCE2F1;
-			}
-
-			#control {
-				position: absolute;
-				left: 45px;
-				bottom: 20px;
-				font-size: 20px;
-			}
-
-			#control select {
-				font-size: 20px;
-			}
-
-			select,
-			textarea {
-				border: 1px solid gray;
-			}
-
-			#msg {
-				font-size: 40px;
-				width: 855px;
-				height: 125px;
-				border: 0;
-			}
-
-			#content-title {
-				font-family: "楷体";
-				color: green;
-				font-size: 40px;
-				margin: 10px auto;
-			}
-
-			hr {
-				border: 1px solid gray;
-				width: 600px;
-				margin: auto;
-			}
-
-			#show_msg {
-				width: 853px;
-				margin-left: 47px;
-				margin-top: 10px;
-				font-size: 14px;
-				font-weight: bold;
-				height: 1890px;
-				overflow: auto;
-			}
-
-			ul {
-				font-size: 12px;
-				list-style: none;
-				width: 110px;
-			}
-
-			#button1 {
-				width: 300px;
-				height: 125px;
-				background-color: #FFF2E2;
-				font-size: 45px;
-				position: absolute;
-				left: 855px;
-				bottom: 37px;
-			}
-
-			#sendresult {
-				position: absolute;
-				font-size: 20px;
-				left: 855px;
-				bottom: 5px;
-				width: 300px;
-				height: 32px;
-				background-color: #fff;
-			}
-
-			#images {
-				font-size: 20px;
-				position: relative;
-				bottom: 5px;
-			}
-
-			#image {
-				background-color: #FFF2E2;
-				width: 755.4px;
-				font-size: 20px;
-			}
-
-			#ymd {
-				/*设置字体大小为35px*/
-				font-size: 35px;
-				margin-bottom: 20px;
-			}
-
-			#user {
-				/*设置字体大小为35px*/
-				font-size: 35px;
-				height: 150px;
-			}
-
-			#time {
-				/*设置字体大小为40px*/
-				font-size: 40px;
-				margin-left: 900px;
-			}
-
-			#visitor {
-				/*设置字体大小为30px*/
-				font-size: 30px;
-				position: absolute;
-				right: 65px;
-			}
-
-			#bottom {
-				width: 1200px;
-				margin: 0 auto;
-				display: flex;
-				justify-content: space-around;
-			}
-
-			#bottom a {
-				color: #000;
-				text-decoration: none;
-			}
-
-			/*弹性布局封装*/
-			.flex {
-				/*弹性布局*/
-				display: flex;
-				/*主轴对齐*/
-				justify-content: center;
-				/*交叉轴对齐*/
-				align-items: center;
-			}
-
-			p {
-				/*设置字体大小为40px*/
-				font-size: 40px;
-				/*自动换行*/
-				word-wrap: break-word;
-			}
-
-			img {
-				/*限制图片的宽度为835px*/
-				max-width: 835px;
-			}
-		</style>
-
-		<script type="text/javascript">
-			//通过ajax无刷新方式获得最新的聊天内容
-			var maxID = 0;
-			// websocket
-	    	var ws=false,n=false;
-	    	var send = 'type=add&ming=';
-			var str;
-			// users
-			var users;
-			// 图片数量
-			var img_num;
-			// 图片
-			var image;
-
-			// socket
-			function socket() {
-		 		var url='ws://192.168.0.106:8000';
-		        //创建socket，注意URL的格式：ws://ip:端口
-		        ws = new WebSocket(url);
-			}
-
-			function showmessage() {
-				var xhr = new XMLHttpRequest();
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState == 4) {
-						var message = xhr.responseText;
-						// console.log(message);
-						if (message != 0) {
-							//string--->实体内容
-							eval("var json_info=" + message);
-
-							//遍历json_info的数组，把内容的信息与页面内容做结合
-							var s = "";
-							for (var i = 0; i < json_info.length; i++) {
-								s += "<p style='color:" + json_info[i].color + "'>";
-								s += json_info[i].username + "&nbsp;";
-								s += json_info[i].biaoqing + "&nbsp;:&nbsp;&nbsp;" + json_info[i].msg;
-								if (json_info[i].image) {
-									// 图片地址
-									var img_url = encodeURI(json_info[i].image);
-									s += "<img src='icons/load.png' data-src='" + img_url + "'>";
-								}
-								s += "</p>";
-								s += "<p style='color:black;font-size: 30px;'>（" + json_info[i].add_time.substr(5, 16) + "）</p>";
-
-
-								//把已经获得记录的最大id值赋给maxID
-								maxID = json_info[i].id;
-							}
-							var showmsg = document.getElementById('show_msg');
-							showmsg.innerHTML += s;
-
-							//设置滚动条卷起高度
-							// showmsg.scrollTop = 20000;
-							//卷起高度等于div本身高度，就可以使得滚动条始终在最下边显示
-							showmsg.scrollTop = showmsg.scrollHeight;
-						} else {
-							// lazyload
-							img_num = document.getElementsByTagName('img').length;
-							image = document.getElementsByTagName("img");
-							// 页面载入完毕加载可视区域内的图片
-							lazyload();
-							//停止轮询
-							clearInterval(showmessageFunc);
-							// 设置websocket参数
-	        				n=document.getElementById("user").innerText.substring(0,30);
-							// 启动websocket				
-	        				websocket();
-							// 消息展示区域 
-							var showmsg = document.getElementById('show_msg');
-							setTimeout(function(){
-								//卷起高度等于div本身高度，就可以使得滚动条始终在最下边显示
-								showmsg.scrollTop = showmsg.scrollHeight;
-							},500);
-						}
-
-
-
-
+		function showmessage() {
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState == 4) {
+					var message = xhr.responseText;
+					// console.log(message);
+					if (message != 0) {
+						msg(message);
+						max = move_id = maxID;
+					} else {
+						lazyload();
+						//停止轮询
+						clearInterval(showmessageFunc);
+						// 设置websocket参数
+						n = document.getElementById("user").innerText.substring(0, 30);
+						// 启动websocket				
+						websocket();
 					}
-				}
-				xhr.open('get', './data.php?maxID=' + maxID);
-				xhr.send(null);
 
-			}
-		</script>
-
-		<!-- 插入方法 -->
-		<script type="text/javascript">
-			function insertAtCursor(myField, myValue) {
-				//IE support
-				if (document.selection) {
-					myField.focus();
-					sel = document.selection.createRange();
-					sel.text = myValue;
-					sel.select();
-				}
-				//MOZILLA/NETSCAPE support 
-				else if (myField.selectionStart || myField.selectionStart == '0') {
-					var startPos = myField.selectionStart;
-					var endPos = myField.selectionEnd;
-					// save scrollTop before insert www.keleyi.com
-					var restoreTop = myField.scrollTop;
-					myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
-					if (restoreTop > 0) {
-						myField.scrollTop = restoreTop;
-					}
-					myField.focus();
-					myField.selectionStart = startPos + myValue.length;
-					myField.selectionEnd = startPos + myValue.length;
-				} else {
-					myField.value += myValue;
-					myField.focus();
 				}
 			}
-		</script>
+			xhr.open('get', './data.php?maxID=' + max);
+			xhr.send(null);
 
-	</head>
+		}
+	</script>
+
+	<!-- 插入方法 -->
+	<script type="text/javascript">
+		function insertAtCursor(myField, myValue) {
+			//IE support
+			if (document.selection) {
+				myField.focus();
+				sel = document.selection.createRange();
+				sel.text = myValue;
+				sel.select();
+			}
+			//MOZILLA/NETSCAPE support 
+			else if (myField.selectionStart || myField.selectionStart == '0') {
+				var startPos = myField.selectionStart;
+				var endPos = myField.selectionEnd;
+				// save scrollTop before insert www.keleyi.com
+				var restoreTop = myField.scrollTop;
+				myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
+				if (restoreTop > 0) {
+					myField.scrollTop = restoreTop;
+				}
+				myField.focus();
+				myField.selectionStart = startPos + myValue.length;
+				myField.selectionEnd = startPos + myValue.length;
+			} else {
+				myField.value += myValue;
+				myField.focus();
+			}
+		}
+	</script>
+
+</head>
 
 
-	<body>
-		<div id="main">
-			<div id="left">
-				<div id="content">
-					<p id="content-title" class="flex">聊天室</p>
-					<hr />
-					<div id="show_msg">
+<body>
+	<div id="main">
+		<div id="left">
+			<div id="content">
+				<p id="content-title" class="flex">聊天室</p>
+				<hr />
+				<div id="show_msg">
 
+				</div>
+			</div>
+			<div id="send">
+				<form>
+					<div id="control">
+						颜色：
+						<select name="color">
+							<option value="">- - - - - -</option>
+							<option style="color:#FF8888" value="#FF8888">爱的暗示</option>
+							<option style="color:#00BBFF" value="#00BBFF">忧郁的蓝</option>
+							<option style="color:#0000FF" value="#0000FF">碧空蓝天</option>
+							<option style="color:#9F88FF" value="#9F88FF">灰蓝种族</option>
+							<option style="color:#000088" value="#000088 ">蔚蓝海洋</option>
+							<option style="color:#77FFEE" value="#77FFEE">清清之蓝</option>
+							<option style="color:#4400B3" value="#4400B3">发亮篮紫</option>
+							<option style="color:#A500CC" value="#A500CC">紫的拘谨</option>
+							<option style="color:#B088FF" value="#B088FF">卡其制服</option>
+							<option style="color:#D1BBFF" value="#D1BBFF">伦敦灰雾</option>
+							<option style="color:#DC143C" value="#DC143C">卡布其诺</option>
+							<option style="color:#A52A2A" value="#A52A2A">苦涩心红</option>
+							<option style="color:#FF0000" value="#FF0000">正宗喜红</option>
+							<option style="color:#990099" value="#990099">红的发紫</option>
+							<option style="color:#FF0000" value="#FF0000">红旗飘飘</option>
+							<option style="color:#D2691E" value="#D2691E ">黄金岁月</option>
+							<option style="color:#800080" value="#800080">紫金绣贴</option>
+							<option style="color:#006400" value="#006400">橄榄树绿</option>
+							<option style="color:#000000" value="#000000">绝对黑色</option>
+						</select>
+						表情：
+						<select id="biaoqing">
+							<option value=""></option>
+							<option value="ε=ε=(ノ≧∇≦)ノ2020">ε=ε=(ノ≧∇≦)ノ2020</option>
+							<option value="2020 (ง •̀o•́)ง (ง •̀o•́)ง">2020 (ง •̀o•́)ง (ง •̀o•́)ง</option>
+							<option value="ᶘ ͡°ᴥ͡°ᶅ">ᶘ ͡°ᴥ͡°ᶅ</option>
+							<option value="☺">☺</option>
+							<option value="☻">☻</option>
+							<option value="(✿◠‿◠)">(✿◠‿◠)</option>
+							<option value="(͡° ͜ʖ ͡°)">(͡° ͜ʖ ͡°)</option>
+							<option value="≥Ö‿Ö≤">≥Ö‿Ö≤</option>
+							<option value="(ô‿ô)">(ô‿ô)</option>
+							<option value="≧◠◡◠≦✌">≧◠◡◠≦✌</option>
+							<option value="(ง˃̀ꄃ˂́)۶">(ง˃̀ꄃ˂́)۶</option>
+							<option value="(▷‿◠)✌">(▷‿◠)✌</option>
+							<option value="☜(ˆ▽ˆ)">☜(ˆ▽ˆ)</option>
+							<option value="（‐＾▽＾‐）">（‐＾▽＾‐）</option>
+							<option value="ᕙ( ＾‿ゝ＾ c)">ᕙ( ＾‿ゝ＾ c)</option>
+							<option value="≧◔◡◔≦">≧◔◡◔≦</option>
+							<option value="( ´◔ ‸◔`)">( ´◔ ‸◔`)</option>
+							<option value="☹">☹</option>
+							<option value="(୨୧•͈ᴗ•͈)◞︎ᶫᵒᵛᵉ   ♡">(୨୧•͈ᴗ•͈)◞︎ᶫᵒᵛᵉ ♡</option>
+							<option value="≧◉◡◉≦">≧◉◡◉≦</option>
+							<option value="(¬‿¬)">(¬‿¬)</option>
+							<option value="ू(ʚ̴̶̷́ .̠ ʚ̴̶̷̥̀ ू)">ू(ʚ̴̶̷́ .̠ ʚ̴̶̷̥̀ ू)</option>
+							<option value="(─‿‿─)">(─‿‿─)</option>
+							<option value="(ง˃̀ꄃ˂́)۶">(ง˃̀ꄃ˂́)۶</option>
+							<option value="٩(Ü)۶٩(Ü)۶">٩(Ü)۶٩(Ü)۶</option>
+							<option value="٩(●̮̃•)۶">٩(●̮̃•)۶</option>
+							<option value="\﻿ (•◡•) /">\﻿ (•◡•) /</option>
+							<option value="(づ￣3￣)づ">(づ￣3￣)づ</option>
+							<option value="(￣ε(#￣)">(￣ε(#￣)</option>
+							<option value="|*｡´Д｀|┛βyёβyё♪">|*｡´Д｀|┛βyёβyё♪</option>
+						</select>
+						心情：
+						<select name="biaoqing">
+							<option value="">- - - - - -</option>
+							<option value="笑着">笑着</option>
+							<option value="高兴地">高兴地</option>
+							<option value="含情脉脉">含情脉脉</option>
+							<option value="微笑">微笑</option>
+							<option value="幸福">幸福</option>
+							<option value="有点脸红">有点脸红</option>
+							<option value="使劲安慰">使劲安慰</option>
+							<option value="自言自语">自言自语</option>
+							<option value="差点要哭">差点要哭</option>
+							<option value="嚎啕大哭">嚎啕大哭</option>
+							<option value="一把鼻涕">一把鼻涕</option>
+							<option value="很无辜">很无辜</option>
+							<option value="流口水">流口水</option>
+							<option value="神秘兮兮">神秘兮兮</option>
+							<option value="幸灾乐祸">幸灾乐祸</option>
+							<option value="很不服气">很不服气</option>
+							<option value="不怀好意">不怀好意</option>
+							<option value="拳打脚踢">拳打脚踢</option>
+							<option value="不知所措">不知所措</option>
+							<option value="翻箱倒柜">翻箱倒柜</option>
+							<option value="很遗憾">很遗憾</option>
+							<option value="很严肃">很严肃</option>
+							<option value="善意警告">善意警告</option>
+							<option value="正气凛然">正气凛然</option>
+							<option value="哈欠连天">哈欠连天</option>
+							<option value="小声的">小声的</option>
+							<option value="大声的">大声的</option>
+							<option value="尖叫一声">尖叫一声</option>
+							<option value="遗憾的">遗憾的</option>
+							<option value="无精打采">无精打采</option>
+							<option value="想吐">想吐</option>
+							<option value="真诚">真诚</option>
+							<option value="不好意思">不好意思</option>
+							<option value="扭捏的">扭捏的</option>
+							<option value="腼腆的">腼腆的</option>
+							<option value="很诧异">很诧异</option>
+							<option value="依依不舍">依依不舍</option>
+						</select>
+
+						<br />
+						<textarea id="msg" name="msg" autofocus="autofocus"></textarea>
+						<input type="button" id="button1" value="发送消息" onclick="sendmsg()" />
+						<span id="sendresult" class='flex'></span>
+
+						<div id="images">上传图片：<input type="file" id="image" name="image" accept="image/*" /></div>
 					</div>
-				</div>
-				<div id="send">
-					<form>
-						<div id="control">
-							颜色：
-							<select name="color">
-								<option value="">- - - - - -</option>
-								<option style="color:#FF8888" value="#FF8888">爱的暗示</option>
-								<option style="color:#00BBFF" value="#00BBFF">忧郁的蓝</option>
-								<option style="color:#0000FF" value="#0000FF">碧空蓝天</option>
-								<option style="color:#9F88FF" value="#9F88FF">灰蓝种族</option>
-								<option style="color:#000088" value="#000088 ">蔚蓝海洋</option>
-								<option style="color:#77FFEE" value="#77FFEE">清清之蓝</option>
-								<option style="color:#4400B3" value="#4400B3">发亮篮紫</option>
-								<option style="color:#A500CC" value="#A500CC">紫的拘谨</option>
-								<option style="color:#B088FF" value="#B088FF">卡其制服</option>
-								<option style="color:#D1BBFF" value="#D1BBFF">伦敦灰雾</option>
-								<option style="color:#DC143C" value="#DC143C">卡布其诺</option>
-								<option style="color:#A52A2A" value="#A52A2A">苦涩心红</option>
-								<option style="color:#FF0000" value="#FF0000">正宗喜红</option>
-								<option style="color:#990099" value="#990099">红的发紫</option>
-								<option style="color:#FF0000" value="#FF0000">红旗飘飘</option>
-								<option style="color:#D2691E" value="#D2691E ">黄金岁月</option>
-								<option style="color:#800080" value="#800080">紫金绣贴</option>
-								<option style="color:#006400" value="#006400">橄榄树绿</option>
-								<option style="color:#000000" value="#000000">绝对黑色</option>
-							</select>
-							表情：
-							<select id="biaoqing">
-								<option value=""></option>
-								<option value="ε=ε=(ノ≧∇≦)ノ2020">ε=ε=(ノ≧∇≦)ノ2020</option>
-								<option value="2020 (ง •̀o•́)ง (ง •̀o•́)ง">2020 (ง •̀o•́)ง (ง •̀o•́)ง</option>
-								<option value="ᶘ ͡°ᴥ͡°ᶅ">ᶘ ͡°ᴥ͡°ᶅ</option>
-								<option value="☺">☺</option>
-								<option value="☻">☻</option>
-								<option value="(✿◠‿◠)">(✿◠‿◠)</option>
-								<option value="(͡° ͜ʖ ͡°)">(͡° ͜ʖ ͡°)</option>
-								<option value="≥Ö‿Ö≤">≥Ö‿Ö≤</option>
-								<option value="(ô‿ô)">(ô‿ô)</option>
-								<option value="≧◠◡◠≦✌">≧◠◡◠≦✌</option>
-								<option value="(ง˃̀ꄃ˂́)۶">(ง˃̀ꄃ˂́)۶</option>
-								<option value="(▷‿◠)✌">(▷‿◠)✌</option>
-								<option value="☜(ˆ▽ˆ)">☜(ˆ▽ˆ)</option>
-								<option value="（‐＾▽＾‐）">（‐＾▽＾‐）</option>
-								<option value="ᕙ( ＾‿ゝ＾ c)">ᕙ( ＾‿ゝ＾ c)</option>
-								<option value="≧◔◡◔≦">≧◔◡◔≦</option>
-								<option value="( ´◔ ‸◔`)">( ´◔ ‸◔`)</option>
-								<option value="☹">☹</option>
-								<option value="(୨୧•͈ᴗ•͈)◞︎ᶫᵒᵛᵉ   ♡">(୨୧•͈ᴗ•͈)◞︎ᶫᵒᵛᵉ ♡</option>
-								<option value="≧◉◡◉≦">≧◉◡◉≦</option>
-								<option value="(¬‿¬)">(¬‿¬)</option>
-								<option value="ू(ʚ̴̶̷́ .̠ ʚ̴̶̷̥̀ ू)">ू(ʚ̴̶̷́ .̠ ʚ̴̶̷̥̀ ू)</option>
-								<option value="(─‿‿─)">(─‿‿─)</option>
-								<option value="(ง˃̀ꄃ˂́)۶">(ง˃̀ꄃ˂́)۶</option>
-								<option value="٩(Ü)۶٩(Ü)۶">٩(Ü)۶٩(Ü)۶</option>
-								<option value="٩(●̮̃•)۶">٩(●̮̃•)۶</option>
-								<option value="\﻿ (•◡•) /">\﻿ (•◡•) /</option>
-								<option value="(づ￣3￣)づ">(づ￣3￣)づ</option>
-								<option value="(￣ε(#￣)">(￣ε(#￣)</option>
-								<option value="|*｡´Д｀|┛βyёβyё♪">|*｡´Д｀|┛βyёβyё♪</option>
-							</select>
-							心情：
-							<select name="biaoqing">
-								<option value="">- - - - - -</option>
-								<option value="笑着">笑着</option>
-								<option value="高兴地">高兴地</option>
-								<option value="含情脉脉">含情脉脉</option>
-								<option value="微笑">微笑</option>
-								<option value="幸福">幸福</option>
-								<option value="有点脸红">有点脸红</option>
-								<option value="使劲安慰">使劲安慰</option>
-								<option value="自言自语">自言自语</option>
-								<option value="差点要哭">差点要哭</option>
-								<option value="嚎啕大哭">嚎啕大哭</option>
-								<option value="一把鼻涕">一把鼻涕</option>
-								<option value="很无辜">很无辜</option>
-								<option value="流口水">流口水</option>
-								<option value="神秘兮兮">神秘兮兮</option>
-								<option value="幸灾乐祸">幸灾乐祸</option>
-								<option value="很不服气">很不服气</option>
-								<option value="不怀好意">不怀好意</option>
-								<option value="拳打脚踢">拳打脚踢</option>
-								<option value="不知所措">不知所措</option>
-								<option value="翻箱倒柜">翻箱倒柜</option>
-								<option value="很遗憾">很遗憾</option>
-								<option value="很严肃">很严肃</option>
-								<option value="善意警告">善意警告</option>
-								<option value="正气凛然">正气凛然</option>
-								<option value="哈欠连天">哈欠连天</option>
-								<option value="小声的">小声的</option>
-								<option value="大声的">大声的</option>
-								<option value="尖叫一声">尖叫一声</option>
-								<option value="遗憾的">遗憾的</option>
-								<option value="无精打采">无精打采</option>
-								<option value="想吐">想吐</option>
-								<option value="真诚">真诚</option>
-								<option value="不好意思">不好意思</option>
-								<option value="扭捏的">扭捏的</option>
-								<option value="腼腆的">腼腆的</option>
-								<option value="很诧异">很诧异</option>
-								<option value="依依不舍">依依不舍</option>
-							</select>
+				</form>
 
-							<br />
-							<textarea id="msg" name="msg" autofocus="autofocus"></textarea>
-							<input type="button" id="button1" value="发送消息" onclick="sendmsg()" />
-							<span id="sendresult" class='flex'></span>
-
-							<div id="images">上传图片：<input type="file" id="image" name="image" accept="image/*" /></div>
-						</div>
-					</form>
-
-				</div>
-			</div>
-			<h2 id="user" class="flex"></h2>
-			<h3 id="ymd" class="flex"></h3>
-			<div id="weather">
-				<iframe allowtransparency="true" frameborder="0" width="300" height="460" scrolling="no" src="//tianqi.2345.com/plugin/widget/index.htm?s=2&z=1&t=1&v=1&d=5&bd=0&k=&f=&ltf=009944&htf=cc0000&q=1&e=1&a=1&c=54511&w=300&h=500&align=center"></iframe>
-				<iframe src="https://music.163.com/outchain/player?type=0&amp;id=865772037&amp;auto=0" width="300" height="1150"
-				 frameborder="0" marginwidth="0" marginheight="0"></iframe>
-
-			</div>
-			<div id="time" class="flex">
-				<h3 id="myTimer"></h3>
-			</div>
-			<br>
-			<div id="visitor">
-				今日访客：<span id="number"></span>
 			</div>
 		</div>
-		<div id="bottom">
-			<a href="http://www.beian.miit.gov.cn" target="_blank">【湘ICP备20002944号】</a>
-			<a href="realmName/lgcweb.cn.html" target="_blank">注册信息（2020-2030）</a>
-			<a href="mqqwpa://im/chat?chat_type=wpa&uin=1042561833" target="_blank">手机QQ</a>
-			<a href="http://wpa.qq.com/msgrd?v=3&uin=1042561833&site=qq&menu=yes" target="_blank">电脑QQ</a>
-			<a href="https://demo.popoim.cn/im/h5" target="_blank">泡泡IM</a>
-			<a href="http://im.classba.com.cn/main.php" target="_blank">在线聊天IM</a>
-			<a href="http://chat.workerman.net/" target="_blank">workerman-chat</a>
+		<h2 id="user" class="flex"></h2>
+		<h3 id="ymd" class="flex"></h3>
+		<div id="weather">
+			<iframe allowtransparency="true" frameborder="0" width="300" height="460" scrolling="no"
+				src="//tianqi.2345.com/plugin/widget/index.htm?s=2&z=1&t=1&v=1&d=5&bd=0&k=&f=&ltf=009944&htf=cc0000&q=1&e=1&a=1&c=54511&w=300&h=500&align=center"></iframe>
+			<iframe src="https://music.163.com/outchain/player?type=0&amp;id=865772037&amp;auto=0" width="300"
+				height="1150" frameborder="0" marginwidth="0" marginheight="0"></iframe>
+
 		</div>
+		<div id="time" class="flex">
+			<h3 id="myTimer"></h3>
+		</div>
+		<br>
+		<div id="visitor">
+			今日访客：<span id="number"></span>
+		</div>
+		<div id="read_before" class="read flex">阅读之前消息</div>
+		<div id="read_after"  class="read flex">阅读之后消息</div>
+	</div>
+	<div id="bottom">
+		<a href="http://www.beian.miit.gov.cn" target="_blank">【湘ICP备20002944号】</a>
+		<a href="realmName/lgcweb.cn.html" target="_blank">注册信息（2020-2030）</a>
+		<a href="mqqwpa://im/chat?chat_type=wpa&uin=1042561833" target="_blank">手机QQ</a>
+		<a href="http://wpa.qq.com/msgrd?v=3&uin=1042561833&site=qq&menu=yes" target="_blank">电脑QQ</a>
+		<a href="https://demo.popoim.cn/im/h5" target="_blank">泡泡IM</a>
+		<a href="http://im.classba.com.cn/main.php" target="_blank">在线聊天IM</a>
+		<a href="http://chat.workerman.net/" target="_blank">workerman-chat</a>
+	</div>
 
+</body>
 
-	</body>
 </html>
 <script type="text/javascript">
 	/*
@@ -478,7 +503,7 @@
 	function number() {
 		var xhr = new XMLHttpRequest();
 
-		xhr.onreadystatechange = function() {
+		xhr.onreadystatechange = function () {
 			if (xhr.readyState == 4) {
 				var number = xhr.responseText;
 				document.getElementById('number').innerText = number;
@@ -506,7 +531,7 @@
 				if (userName) {
 
 					// 限制网名长度
-					userName=userName.substring(0,30);
+					userName = userName.substring(0, 30);
 					// 设置cookie
 					setCookie('userName', userName, 30 * 24 * 60 * 60);
 
@@ -541,17 +566,14 @@
 		修改网名
 	 */
 	var btn = document.getElementById('user');
-	btn.onclick = function() {
+	btn.onclick = function () {
 		var user = document.getElementById("user").innerText;
 		var userName = prompt("修改您的昵称", user);
 		if (userName) {
 			// 限制网名长度
-			userName=userName.substring(0,30);
+			userName = userName.substring(0, 30);
 			// 设置cookie
 			setCookie('userName', userName, 30 * 24 * 60 * 60);
-
-			// console.log(userName);
-			//显示用户名
 			document.getElementById("user").innerHTML = userName;
 		}
 	}
@@ -565,7 +587,6 @@
 		document.getElementById("ymd").innerHTML = ymd;
 
 		var t = d.toTimeString().substr(0, 8);
-		// var t = d.getFullYear()+"年"+(d.getMonth()+1)+"月"+d.getDate()+"日"+" "+ d.toTimeString().substr(0, 8);
 		document.getElementById("myTimer").innerHTML = t;
 	}
 
@@ -582,7 +603,7 @@
 			var fd = new FormData(fm); //收集数据
 
 			var xhr = new XMLHttpRequest();
-			xhr.onreadystatechange = function() {
+			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4) {
 					// alert(xhr.responseText);
 					document.getElementById('sendresult').innerHTML = xhr.responseText;
@@ -616,7 +637,60 @@
 	 */
 	// 存储图片加载到的位置，避免每次都从第一张图片开始遍历
 	var n = 0;
-	document.getElementById('show_msg').onscroll = lazyloadFun;
+	showmsg = document.getElementById('show_msg');
+	function show(ID,up) {
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function () {
+			if (xhr.readyState == 4) {
+				var message = xhr.responseText;
+				if (message != 0) {
+					showmsg.innerHTML = '';
+					msg(message);
+					if (up) {
+						showmsg.scrollTop = 0;
+					}
+				}
+			}
+		}
+		xhr.open('get', './move.php?maxID=' + ID);
+		xhr.send(null);
+	}
+
+
+	read_before_id = document.getElementById("read_before");
+	read_before = read_before_id.getAttribute("class");
+	read_after_id = document.getElementById("read_after");
+	read_after = read_after_id.getAttribute("class");
+	showmsg.onscroll = function () {
+		lazyloadFun();
+		++move;
+		if (move>60 && max == maxID) {
+			if (read_before.indexOf('now') == -1) {
+				read_before = read_before.concat(' now');
+				read_before_id.setAttribute("class",read_before);
+				move = 0;
+			}
+		}
+		if (max != maxID) {
+			if (read_after.indexOf('now') == -1) {
+				read_after = read_after.concat(' now');
+				read_after_id.setAttribute("class",read_after);
+			}
+		}
+		if (move_id <= 0) {
+			if (read_before.indexOf('now') != -1) {
+				read_before = read_before.replace('now','');
+				read_before_id.setAttribute("class",read_before);
+			}
+		}
+		if (move_id >= max) {
+			if (read_after.indexOf('now') != -1) {
+				read_after = read_after.replace('now','');
+				read_after_id.setAttribute("class",read_after);
+			}
+		}
+		
+	}
 
 	function lazyloadFun() {
 		n = 0;
@@ -624,56 +698,70 @@
 	}
 
 	function lazyload() {
+		img_num = document.getElementsByTagName('img').length;
+		image = document.getElementsByTagName("img");
 		for (var i = n; i < img_num; i++) {
 			var top = image[i].getBoundingClientRect().top;
 			if (top > 100) {
 				if (image[i].getAttribute("src") == "icons/load.png") {
 					image[i].src = image[i].getAttribute("data-src");
-					var showmsg = document.getElementById('show_msg');
 				}
 			}
 			n = i + 1;
 		}
 	}
 
+	read_before_id.onclick = function(){
+		if(move_id > 0){
+			move_id = move_id - 100;
+			show(move_id,true);
+		}
+	}
+
+	read_after_id.onclick = function(){
+		if(move_id <= max){
+			move_id = move_id + 100;
+			show(move_id,false);
+		}
+	}
+
 	/*
 	    WebSocket
 	 */
-	 function websocket(){
-	 		// 连接websocket
-	 		socket();
-	        //握手监听函数
-	        ws.onopen=function(){
-	            //状态为1证明握手成功，然后把client自定义的名字发送过去
-	            if(ws.readyState==1){
-	                ws.send(send+n);
-	            }
-	        }
-	    //错误返回信息函数
-	    ws.onerror = function(){
-	        console.log("error");
-	    };
-	    //监听服务器端推送的消息
-	    ws.onmessage = function (msg){
-			var showmsg = document.getElementById('show_msg');
-	        // JSON.parse() 方法用于将一个 JSON 字符串转换为对象。
-	        str =  JSON.parse(msg.data);
-	        if (typeof(str.users) != 'undefined') {
+	function websocket() {
+		// 连接websocket
+		socket();
+		//握手监听函数
+		ws.onopen = function () {
+			//状态为1证明握手成功，然后把client自定义的名字发送过去
+			if (ws.readyState == 1) {
+				ws.send(send + n);
+			}
+		}
+		//错误返回信息函数
+		ws.onerror = function () {
+			console.log("error");
+		};
+		//监听服务器端推送的消息
+		ws.onmessage = function (msg) {
+			// JSON.parse() 方法用于将一个 JSON 字符串转换为对象。
+			str = JSON.parse(msg.data);
+			if (typeof (str.users) != 'undefined') {
 				users = str.users;
 			}
-        	for(var i = 0;i < users.length;i++){
-        		if(typeof(str.nrong) != 'undefined' && users[i]['code'] == str.nrong){
-        			//插入用户退出提示语
-					var	s = "<p style='color:#006400;font-size:35px;text-align:center;' class='flex'>"+users[i]['name']+" 退出 "+str.time+"</p>";
+			for (var i = 0; i < users.length; i++) {
+				if (typeof (str.nrong) != 'undefined' && users[i]['code'] == str.nrong) {
+					//插入用户退出提示语
+					var s = "<p style='color:#006400;font-size:35px;text-align:center;' class='flex'>" + users[i]['name'] + " 退出 " + str.time + "</p>";
 					showmsg.innerHTML += s;
-        		}
-        	}
+				}
+			}
 
-	        //插入用户加入提示语
-			var	s = "<p style='color:#D2691E;font-size:35px;text-align:center;' class='flex'>欢迎 "+str.name+" 加入 "+str.time+"</p>";
-			if (typeof(str.name) != 'undefined') {
+			//插入用户加入提示语
+			var s = "<p style='color:#D2691E;font-size:35px;text-align:center;' class='flex'>欢迎 " + str.name + " 加入 " + str.time + "</p>";
+			if (typeof (str.name) != 'undefined') {
 				showmsg.innerHTML += s;
-				var arr = {'code':str.code,'name':str.name};
+				var arr = { 'code': str.code, 'name': str.name };
 				users.push(arr);
 				//生成用户信息
 				visitor();
@@ -684,33 +772,22 @@
 			//数据库拉去消息
 			if (str.nrong == 'send') {
 				showmessage();
-				//1s后执行lazyload方法
-				setTimeout(function(){ 
-					// lazyload
-					img_num = document.getElementsByTagName('img').length;
-					image = document.getElementsByTagName("img");
-					// 页面载入完毕加载可视区域内的图片
-					lazyload(); 
-				}, 500);
-				setTimeout(function(){
-					//卷起高度等于div本身高度，就可以使得滚动条始终在最下边显示
-					showmsg.scrollTop = showmsg.scrollHeight;
-				},1000);
 			}
 			//卷起高度等于div本身高度，就可以使得滚动条始终在最下边显示
 			showmsg.scrollTop = showmsg.scrollHeight;
-	    }
-	     
-	    //断开WebSocket连接
-	    ws.onclose = function(){
-	    	send = null,n = null;
-		 	websocket(); 
-	    }
-	 }
+			move = 0;
+		}
+
+		//断开WebSocket连接
+		ws.onclose = function () {
+			send = null, n = null;
+			websocket();
+		}
+	}
 
 
 
-	window.onload = function() {
+	window.onload = function () {
 		//获得最新聊天内容
 		//制作轮询（推技术）
 		showmessageFunc = setInterval("showmessage()", 2000);
@@ -720,7 +797,7 @@
 		setInterval("myTimer()", 1000);
 		//显示用户名
 		queryUserFunc = setInterval("queryUser()", 10);
-		
+
 	}
 </script>
 
@@ -728,7 +805,7 @@
 <script type="text/javascript">
 	var isEnter = false;
 	var isCtrl = false;
-	document.onkeydown = function(event) {
+	document.onkeydown = function (event) {
 		var e = event || window.event || arguments.callee.caller.arguments[0];
 		var key = e.keyCode;
 		if (key == 13) {
@@ -741,7 +818,7 @@
 			sendmsg();
 		}
 	};
-	document.onkeyup = function(event) {
+	document.onkeyup = function (event) {
 		var e = event || window.event || arguments.callee.caller.arguments[0];
 		var key = e.keyCode;
 		if (key == 13) {
