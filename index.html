@@ -663,11 +663,10 @@
 	showmsg.onscroll = function () {
 		lazyloadFun();
 		++move;
-		if (move>60 && max == maxID) {
+		if (move>60) {
 			if (read_before.indexOf('now') == -1) {
 				read_before = read_before.concat(' now');
 				read_before_id.setAttribute("class",read_before);
-				move = 0;
 			}
 		}
 		if (max != maxID) {
