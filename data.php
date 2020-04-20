@@ -2,8 +2,10 @@
 // 连接数据库、设置字符集
 include 'config.php';
 
+
 $maxID = $_GET['maxID'];
 //每次都请求新的聊天内容（不需要旧的信息）
+//本次请求的记录结果id需要大于上次“已经获得记录的最大id”
 
 //编写查询sql语句
 // $sql = "select * from message where id >'$maxID'";
@@ -11,7 +13,7 @@ $maxID = $_GET['maxID'];
 // 创建预处理语句
 $stmt=mysqli_stmt_init($link);
 //编写预处理查询sql语句
-$sql = "select * from (select * from message order by id desc limit 100) a where id > ? order by id";
+$sql = "select id,username,msg,color,biaoqing,image,add_time from (select * from message order by id desc limit 100) a where id > ? order by id";
 
 
 if (mysqli_stmt_prepare($stmt,$sql))
