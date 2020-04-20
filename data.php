@@ -13,7 +13,7 @@ $maxID = $_GET['maxID'];
 // 创建预处理语句
 $stmt=mysqli_stmt_init($link);
 //编写预处理查询sql语句
-$sql = "select * from (select * from message order by id desc limit 1000) a where id > ? order by id";
+$sql = "select * from (select * from message order by id desc limit 100) a where id > ? order by id";
 
 
 if (mysqli_stmt_prepare($stmt,$sql))
