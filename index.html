@@ -227,7 +227,7 @@
 
 		// socket
 		function socket() {
-			var url = 'ws://39.105.0.128:8000';
+			var url = 'ws://192.168.0.106:8000';
 			//创建socket，注意URL的格式：ws://ip:端口
 			ws = new WebSocket(url);
 		}
@@ -270,7 +270,7 @@
 					// console.log(message);
 					if (message != 0) {
 						msg(message);
-						max = move_id = maxID;
+						max = maxID;
 					} else {
 						lazyload();
 						//停止轮询
@@ -279,13 +279,12 @@
 						n = document.getElementById("user").innerText.substring(0, 30);
 						// 启动websocket				
 						websocket();
+						move_id = max;
 					}
-
 				}
 			}
 			xhr.open('get', './data.php?maxID=' + max);
 			xhr.send(null);
-
 		}
 	</script>
 
@@ -520,7 +519,6 @@
 		if (sender + 1) {
 			if (!(userName + 1)) {
 				var num = sender + 7;
-				// console.log(num);
 				var user = decodeURIComponent(document.cookie.slice(num)).replace("&nbsp;", " ");
 				var end = user.indexOf(";");
 				if (end + 1) {
@@ -549,7 +547,6 @@
 				}
 			} else {
 				var num = userName + 9;
-				// console.log(num);
 				var user = decodeURIComponent(document.cookie.slice(num)).replace("&nbsp;", " ");
 				var end = user.indexOf(";");
 				if (end + 1) {
@@ -653,22 +650,6 @@
 		}
 		xhr.open('get', './move.php?maxID=' + ID);
 		xhr.send(null);
-	}
-
-
-	read_before_id = document.getElementById("read_before");
-	read_before = read_before_id.getAttribute("class");
-	read_after_id = document.getElementById("read_after");
-	read_after = read_after_id.getAttribute("class");
-	showmsg.onscroll = function () {
-		lazyloadFun();
-		++move;
-		if (move>60) {
-			if (read_before.indexOf('now') == -1) {
-				read_before = read_before.concat(' now');
-				read_before_id.setAttribute("class",read_before);
-			}
-		}
 		if (max != maxID) {
 			if (read_after.indexOf('now') == -1) {
 				read_after = read_after.concat(' now');
@@ -687,7 +668,22 @@
 				read_after_id.setAttribute("class",read_after);
 			}
 		}
-		
+	}
+
+
+	read_before_id = document.getElementById("read_before");
+	read_before = read_before_id.getAttribute("class");
+	read_after_id = document.getElementById("read_after");
+	read_after = read_after_id.getAttribute("class");
+	showmsg.onscroll = function () {
+		lazyloadFun();
+		++move;
+		if (move>20) {
+			if (read_before.indexOf('now') == -1) {
+				read_before = read_before.concat(' now');
+				read_before_id.setAttribute("class",read_before);
+			}
+		}
 	}
 
 	function lazyloadFun() {
