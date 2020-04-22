@@ -1,10 +1,8 @@
-
+#设置编码格式
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
--- ----------------------------
--- Table structure for message
--- ----------------------------
+#信息表
 DROP TABLE IF EXISTS `message`;
 CREATE TABLE `message`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -19,9 +17,7 @@ CREATE TABLE `message`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 8679 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
--- ----------------------------
--- Table structure for visitor
--- ----------------------------
+#访客表
 DROP TABLE IF EXISTS `visitor`;
 CREATE TABLE `visitor`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
