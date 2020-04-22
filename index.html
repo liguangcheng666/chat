@@ -579,7 +579,6 @@
 		var d = new Date();
 		var ymd = d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
 		document.getElementById("ymd").innerHTML = ymd;
-
 		var t = d.toTimeString().substr(0, 8);
 		document.getElementById("myTimer").innerHTML = t;
 	}
@@ -589,13 +588,10 @@
 	 */
 	function sendmsg() {
 		if (!(document.cookie.indexOf("sendmsg") + 1)) {
-
 			// 设置cookie
 			setCookie('sendmsg', 'sendmsg', 2); //过期时间 2 秒
-
 			var fm = document.getElementsByTagName('form')[0];
 			var fd = new FormData(fm); //收集数据
-
 			var xhr = new XMLHttpRequest();
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4) {
@@ -821,7 +817,6 @@
 		}
 	};
 </script>
-
 
 <!-- 执行插入 -->
 <script type="text/JavaScript">
