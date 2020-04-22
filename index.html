@@ -11,7 +11,6 @@
 			padding: 0;
 			border: 0;
 		}
-
 		#main {
 			width: 1200px;
 			height: 2200px;
@@ -19,24 +18,20 @@
 			margin: 0 auto;
 			position: relative;
 		}
-
 		#left {
 			width: 900px;
 			height: 2000px;
 			background: #CCE8CF;
 			float: left;
 		}
-
 		#content {
 			height: 1979px;
 			padding-top: 1px;
 		}
-
 		#send {
 			height: 220px;
 			background: #DCE2F1;
 		}
-
 		#control {
 			position: absolute;
 			left: 45px;
@@ -47,19 +42,16 @@
 		#control select {
 			font-size: 20px;
 		}
-
 		select,
 		textarea {
 			border: 1px solid gray;
 		}
-
 		#msg {
 			font-size: 40px;
 			width: 855px;
 			height: 125px;
 			border: 0;
 		}
-
 		#content-title {
 			font-family: "楷体";
 			color: green;
@@ -72,7 +64,6 @@
 			width: 600px;
 			margin: auto;
 		}
-
 		#show_msg {
 			width: 853px;
 			margin-left: 47px;
@@ -82,13 +73,11 @@
 			height: 1890px;
 			overflow: auto;
 		}
-
 		ul {
 			font-size: 12px;
 			list-style: none;
 			width: 110px;
 		}
-
 		#button1 {
 			width: 300px;
 			height: 125px;
@@ -98,7 +87,6 @@
 			left: 855px;
 			bottom: 37px;
 		}
-
 		#sendresult {
 			position: absolute;
 			font-size: 20px;
@@ -108,56 +96,47 @@
 			height: 32px;
 			background-color: #fff;
 		}
-
 		#images {
 			font-size: 20px;
 			position: relative;
 			bottom: 5px;
 		}
-
 		#image {
 			background-color: #FFF2E2;
 			width: 755.4px;
 			font-size: 20px;
 		}
-
 		#ymd {
 			/*设置字体大小为35px*/
 			font-size: 35px;
 			margin-bottom: 20px;
 		}
-
 		#user {
 			/*设置字体大小为35px*/
 			font-size: 35px;
 			height: 150px;
 		}
-
 		#time {
 			/*设置字体大小为40px*/
 			font-size: 40px;
 			margin-left: 900px;
 		}
-
 		#visitor {
 			/*设置字体大小为30px*/
 			font-size: 30px;
 			position: absolute;
 			right: 65px;
 		}
-
 		#bottom {
 			width: 1200px;
 			margin: 0 auto;
 			display: flex;
 			justify-content: space-around;
 		}
-
 		#bottom a {
 			color: #000;
 			text-decoration: none;
 		}
-
 		/*弹性布局封装*/
 		.flex {
 			/*弹性布局*/
@@ -167,19 +146,16 @@
 			/*交叉轴对齐*/
 			align-items: center;
 		}
-
 		p {
 			/*设置字体大小为40px*/
 			font-size: 40px;
 			/*自动换行*/
 			word-wrap: break-word;
 		}
-
 		img {
 			/*限制图片的宽度为835px*/
 			max-width: 835px;
 		}
-
 		.read {
 			width: 280px;
 			height: 100px;
@@ -190,30 +166,25 @@
 			transition: all 0.66s;
 			z-index: -1;
 		}
-
 		#read_before{
 			position: absolute;
 			top: 120px;
 			right: 300px;
 		}
-
 		#read_after{
 			position: absolute;
 			bottom: 225px;
 			right: 300px;
 		}
-
 		.now {
 			opacity: 1;
 			z-index: 0;
 			transition: all 0.66s;
 		}
-
 		.now_fast {
 			opacity: 1;
 			z-index: 0;
 		}
-
 	</style>
 
 	<script type="text/javascript">
@@ -249,13 +220,11 @@
 				}
 				s += "</p>";
 				s += "<p style='color:black;font-size: 30px;'>（" + json_info[i].add_time.substr(5, 16) + "）</p>";
-
 				//把已经获得记录的最大id值赋给maxID
 				maxID = json_info[i].id;
 			}
 			showmsg = document.getElementById('show_msg');
 			showmsg.innerHTML += s;
-
 			//设置滚动条卷起高度
 			//卷起高度等于div本身高度，就可以使得滚动条始终在最下边显示
 			showmsg.scrollTop = showmsg.scrollHeight;
@@ -432,12 +401,10 @@
 							<option value="很诧异">很诧异</option>
 							<option value="依依不舍">依依不舍</option>
 						</select>
-
 						<br />
 						<textarea id="msg" name="msg" autofocus="autofocus"></textarea>
 						<input type="button" id="button1" value="发送消息" onclick="sendmsg()" />
 						<span id="sendresult" class='flex'></span>
-
 						<div id="images">上传图片：<input type="file" id="image" name="image" accept="image/*" /></div>
 					</div>
 				</form>
@@ -451,7 +418,6 @@
 				src="//tianqi.2345.com/plugin/widget/index.htm?s=2&z=1&t=1&v=1&d=5&bd=0&k=&f=&ltf=009944&htf=cc0000&q=1&e=1&a=1&c=54511&w=300&h=500&align=center"></iframe>
 			<iframe src="https://music.163.com/outchain/player?type=0&amp;id=865772037&amp;auto=0" width="300"
 				height="1150" frameborder="0" marginwidth="0" marginheight="0"></iframe>
-
 		</div>
 		<div id="time" class="flex">
 			<h3 id="myTimer"></h3>
@@ -524,12 +490,10 @@
 				}
 				var userName = prompt("请输入您的昵称", user);
 				if (userName) {
-
 					// 限制网名长度
 					userName = userName.substring(0, 30);
 					// 设置cookie
 					setCookie('userName', userName, 30 * 24 * 60 * 60);
-
 					document.getElementById("user").innerHTML = userName;
 				} else {
 					var num = '';
@@ -537,10 +501,8 @@
 						num += Math.floor(Math.random() * 10);
 					}
 					var userName = "匿名者" + num;
-
 					// 设置cookie
 					setCookie('userName', userName, 24 * 60 * 60);
-
 					document.getElementById("user").innerHTML = userName;
 				}
 			} else {
@@ -575,7 +537,6 @@
 	    显示时间
 	 */
 	function myTimer() {
-
 		var d = new Date();
 		var ymd = d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
 		document.getElementById("ymd").innerHTML = ymd;
@@ -664,7 +625,6 @@
 		}
 	}
 
-
 	read_before_id = document.getElementById("read_before");
 	read_before = read_before_id.getAttribute("class");
 	read_after_id = document.getElementById("read_after");
@@ -679,12 +639,10 @@
 			}
 		}
 	}
-
 	function lazyloadFun() {
 		n = 0;
 		lazyload();
 	}
-
 	function lazyload() {
 		img_num = document.getElementsByTagName('img').length;
 		image = document.getElementsByTagName("img");
@@ -698,21 +656,18 @@
 			n = i + 1;
 		}
 	}
-
 	read_before_id.onclick = function(){
 		if(move_id > 0){
 			move_id = move_id - 100;
 			show(move_id,true);
 		}
 	}
-
 	read_after_id.onclick = function(){
 		if(move_id <= max){
 			move_id = move_id + 100;
 			show(move_id,false);
 		}
 	}
-
 	/*
 	    WebSocket
 	 */
@@ -738,13 +693,12 @@
 				users = str.users;
 			}
 			for (var i = 0; i < users.length; i++) {
-				if (typeof (str.nrong) != 'undefined' && users[i]['code'] == str.nrong) {
+				if (typeof (str.nrong) != 'undefined' && users[i]['code'] == str.nrong && users[i]['name'] != null) {
 					//插入用户退出提示语
 					var s = "<p style='color:#006400;font-size:35px;text-align:center;' class='flex'>" + users[i]['name'] + " 退出 " + str.time + "</p>";
 					showmsg.innerHTML += s;
 				}
 			}
-
 			if (typeof (str.name) != 'undefined') {
 				//插入用户加入提示语
 				var s = "<p style='color:#D2691E;font-size:35px;text-align:center;' class='flex'>欢迎 " + str.name + " 加入 " + str.time + "</p>";
@@ -764,7 +718,6 @@
 				//显示用户数量
 				number();
 			}
-
 			//数据库拉去消息
 			if (str.nrong == 'send') {
 				showmessage();
@@ -773,16 +726,12 @@
 			showmsg.scrollTop = showmsg.scrollHeight;
 			move = 0;
 		}
-
 		//断开WebSocket连接
 		ws.onclose = function () {
 			send = null, n = null;
 			websocket();
 		}
 	}
-
-
-
 	window.onload = function () {
 		//获得最新聊天内容
 		//制作轮询（推技术）
@@ -793,12 +742,8 @@
 		setInterval("myTimer()", 1000);
 		//显示用户名
 		queryUserFunc = setInterval("queryUser()", 10);
-
 	}
-</script>
-
-<!-- 按键 -->
-<script type="text/javascript">
+    // 按键 
 	var isEnter = false;
 	var isCtrl = false;
 	document.onkeydown = function (event) {
@@ -824,10 +769,7 @@
 			isCtrl = false;
 		}
 	};
-</script>
-
-<!-- 执行插入 -->
-<script type="text/JavaScript">
+   // 执行插入 
 	var selectId = document.getElementById("biaoqing");//获取ID
     selectId.onchange = function()//触发事件
     {
