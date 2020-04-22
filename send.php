@@ -2,8 +2,6 @@
 // 连接数据库、设置字符集
 include 'config.php';
 
-
-
 //接收表单信息并存储
 // print_r($_POST);
 
@@ -17,7 +15,6 @@ $datetime = date("Y-m-d H:i:s",time()-2); //获取时间
 
 //编写预处理查询sql语句
 $sql = "select id from message where ip = ? and add_time > ?";
-
 
 
 if (mysqli_stmt_prepare($stmt,$sql))
