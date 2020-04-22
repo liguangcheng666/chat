@@ -1,6 +1,5 @@
 #设置编码格式
 SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
 
 #信息表
 DROP TABLE IF EXISTS `message`;
@@ -27,4 +26,3 @@ CREATE TABLE `visitor`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1904 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-SET FOREIGN_KEY_CHECKS = 1;
