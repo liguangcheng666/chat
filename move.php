@@ -70,12 +70,4 @@ mysqli_close($link);
 
 
 
-
-
-
-
-
-
-
-
 ?>
