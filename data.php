@@ -36,7 +36,7 @@ if (mysqli_stmt_prepare($stmt,$sql))
 
     if ($info) {
         //通过json格式提供数据给客户端
-        echo json_encode($info);
+        echo json_encode($info,JSON_UNESCAPED_UNICODE);
     }else{
         $info = 0;
         echo json_encode($info);
