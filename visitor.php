@@ -2,7 +2,6 @@
 // 连接数据库、设置字符集
 include 'config.php';
 
-
 if (!isset($_COOKIE['sender']) && empty($_COOKIE['sender'])) {
 	$IP = $_SERVER["REMOTE_ADDR"];//获取IP并保存到变量IP中
 	$url = 'http://ip-api.com/json/'.$IP.'?lang=zh-CN';
