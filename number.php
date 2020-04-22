@@ -2,7 +2,6 @@
 // 连接数据库、设置字符集
 include 'config.php';
 
-
 $ymd = date("Y-m-d");
 
 // 创建预处理语句
