@@ -750,10 +750,14 @@
 				var s = "<p style='color:#D2691E;font-size:35px;text-align:center;' class='flex'>欢迎 " + str.name + " 加入 " + str.time + "</p>";
 				showmsg.innerHTML += s;
 				var arr = { 'code': str.code, 'name': str.name };
+				let tmp = true;
 				for (let i = 0; i < users.length; i++) {
-					if (users[i].code != str.code) {
-						users.push(arr);
+					if (users[i].code == str.code) {
+						tmp = false;
 					}
+				}
+				if (tmp) {
+					users.push(arr);
 				}
 				//生成用户信息
 				visitor();
