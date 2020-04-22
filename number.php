@@ -36,5 +36,4 @@ $sql = "select count(id) from visitor where time > ?";
 //关闭连接
 mysqli_close($link);
 
-
 ?>
