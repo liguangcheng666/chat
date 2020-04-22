@@ -750,7 +750,11 @@
 				var s = "<p style='color:#D2691E;font-size:35px;text-align:center;' class='flex'>欢迎 " + str.name + " 加入 " + str.time + "</p>";
 				showmsg.innerHTML += s;
 				var arr = { 'code': str.code, 'name': str.name };
-				users.push(arr);
+				for (let i = 0; i < users.length; i++) {
+					if (users[i].code != str.code) {
+						users.push(arr);
+					}
+				}
 				//生成用户信息
 				visitor();
 				//显示用户数量
