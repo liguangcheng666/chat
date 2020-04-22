@@ -279,7 +279,7 @@
 						n = document.getElementById("user").innerText.substring(0, 30);
 						// 启动websocket				
 						websocket();
-						move_id = max;
+						move_id = max-100;
 					}
 				}
 			}
@@ -650,7 +650,7 @@
 		}
 		xhr.open('get', './move.php?maxID=' + ID);
 		xhr.send(null);
-		if (max != maxID) {
+		if (move_id != max) {
 			if (read_after.indexOf('now') == -1) {
 				read_after = read_after.concat(' now');
 				read_after_id.setAttribute("class",read_after);
@@ -662,7 +662,7 @@
 				read_before_id.setAttribute("class",read_before);
 			}
 		}
-		if (move_id >= max) {
+		if (move_id >= (max-100)) {
 			if (read_after.indexOf('now') != -1) {
 				read_after = read_after.replace('now','');
 				read_after_id.setAttribute("class",read_after);
