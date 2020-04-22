@@ -46,9 +46,6 @@ if (mysqli_stmt_prepare($stmt,$sql))
 
 
 
-					
-
-
 				if (!empty($msg) || !empty($_FILES['image']['name'])) {
 					
 					if (!empty($_FILES['image']['name'])) {
