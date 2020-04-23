@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL ^ E_NOTICE);
+error_reporting(0);//禁用错误报告 
 ob_implicit_flush();
  
 //地址与接口，即创建socket时需要服务器的IP和端口
@@ -117,7 +117,7 @@ class Sock{
             $this->sockets[]=$v['socket'];
         }
         //输出日志
-        $this->e("key:$k close");
+        // $this->e("key:$k close");
     }
      
     //根据sock在users里面查找相应的$k

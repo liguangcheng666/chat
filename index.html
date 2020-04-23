@@ -3,6 +3,7 @@
 
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=1200,user-scalable=0" />
 	<title>聊天室</title>
 	<link rel="icon" href="icons/大象.ico" type="images/x-ico" />
 	<style type="text/css">
@@ -13,19 +14,19 @@
 		}
 		#main {
 			width: 1200px;
-			height: 2200px;
+			height: 2100px;
 			background: #FDE6E0;
 			margin: 0 auto;
 			position: relative;
 		}
 		#left {
 			width: 900px;
-			height: 2000px;
+			height: 1900px;
 			background: #CCE8CF;
 			float: left;
 		}
 		#content {
-			height: 1979px;
+			height: 1879px;
 			padding-top: 1px;
 		}
 		#send {
@@ -70,7 +71,7 @@
 			margin-top: 10px;
 			font-size: 14px;
 			font-weight: bold;
-			height: 1890px;
+			height: 1790px;
 			overflow: auto;
 		}
 		ul {
@@ -186,7 +187,6 @@
 			z-index: 0;
 		}
 	</style>
-
 	<script type="text/javascript">
 		//通过ajax无刷新方式获得最新的聊天内容
 		var maxID = 0,max = 0,move_id = 0;
@@ -195,14 +195,12 @@
 		var img_num,image,move,read_before,read_before_id,read_after,read_after_id;
 		// showmsg
 		var showmsg;
-
 		// socket
 		function socket() {
 			var url = 'ws://39.105.0.128:8000';
 			//创建socket，注意URL的格式：ws://ip:端口
 			ws = new WebSocket(url);
 		}
-
 		// msg
 		function msg(msg) {
 			//string--->实体内容
@@ -230,7 +228,6 @@
 			showmsg.scrollTop = showmsg.scrollHeight;
 			move = 0;
 		}
-
 		function showmessage() {
 			var xhr = new XMLHttpRequest();
 			xhr.onreadystatechange = function () {
@@ -256,7 +253,6 @@
 			xhr.send(null);
 		}
 	</script>
-
 	<!-- 插入方法 -->
 	<script type="text/javascript">
 		function insertAtCursor(myField, myValue) {
@@ -286,19 +282,14 @@
 			}
 		}
 	</script>
-
 </head>
-
-
 <body>
 	<div id="main">
 		<div id="left">
 			<div id="content">
 				<p id="content-title" class="flex">聊天室</p>
 				<hr />
-				<div id="show_msg">
-
-				</div>
+				<div id="show_msg"></div>
 			</div>
 			<div id="send">
 				<form>
@@ -417,7 +408,7 @@
 			<iframe allowtransparency="true" frameborder="0" width="300" height="460" scrolling="no"
 				src="//tianqi.2345.com/plugin/widget/index.htm?s=2&z=1&t=1&v=1&d=5&bd=0&k=&f=&ltf=009944&htf=cc0000&q=1&e=1&a=1&c=54511&w=300&h=500&align=center"></iframe>
 			<iframe src="https://music.163.com/outchain/player?type=0&amp;id=865772037&amp;auto=0" width="300"
-				height="1150" frameborder="0" marginwidth="0" marginheight="0"></iframe>
+				height="1100" frameborder="0" marginwidth="0" marginheight="0"></iframe>
 		</div>
 		<div id="time" class="flex">
 			<h3 id="myTimer"></h3>
@@ -582,7 +573,6 @@
 	function hideresult() {
 		document.getElementById('sendresult').innerHTML = "";
 	}
-
 	/*
 	    lazyload
 	 */

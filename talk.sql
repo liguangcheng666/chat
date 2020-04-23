@@ -1,7 +1,7 @@
-#…Ë÷√±‡¬Î∏Ò Ω
+#ËÆæÁΩÆÁºñÁ†ÅÊ†ºÂºè
 SET NAMES utf8mb4;
 
-#–≈œ¢±Ì
+#‰ø°ÊÅØË°®
 DROP TABLE IF EXISTS `message`;
 CREATE TABLE `message`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -16,7 +16,7 @@ CREATE TABLE `message`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 8679 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-#∑√øÕ±Ì
+#ËÆøÂÆ¢Ë°®
 DROP TABLE IF EXISTS `visitor`;
 CREATE TABLE `visitor`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -25,4 +25,3 @@ CREATE TABLE `visitor`  (
   `time` varchar(19) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1904 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
