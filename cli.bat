@@ -1,1 +1,1 @@
-php C:\web\Apache\httpd-2.4.41-win64-VS16\Apache24\htdocs\talk\server.php
+php D:\Apa\Apache\Apache24\htdocs\Ajax\02\talk\server.php

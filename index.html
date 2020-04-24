@@ -197,7 +197,7 @@
 		var showmsg;
 		// socket
 		function socket() {
-			var url = 'ws://39.105.0.128:8000';
+			var url = 'ws://192.168.0.106:8000';
 			//创建socket，注意URL的格式：ws://ip:端口
 			ws = new WebSocket(url);
 		}
@@ -226,7 +226,6 @@
 			//设置滚动条卷起高度
 			//卷起高度等于div本身高度，就可以使得滚动条始终在最下边显示
 			showmsg.scrollTop = showmsg.scrollHeight;
-			move = 0;
 		}
 		function showmessage() {
 			var xhr = new XMLHttpRequest();
@@ -426,8 +425,8 @@
 		<a href="mqqwpa://im/chat?chat_type=wpa&uin=1042561833" target="_blank">手机QQ</a>
 		<a href="http://wpa.qq.com/msgrd?v=3&uin=1042561833&site=qq&menu=yes" target="_blank">电脑QQ</a>
 		<a href="https://github.com/liguangcheng666/chat" target="_blank">GitHub</a>
+		<a href="https://gitee.com/clig/Chat/" target="_blank">码云</a>
 		<a href="https://demo.popoim.cn/im/h5" target="_blank">泡泡IM</a>
-		<a href="http://im.classba.com.cn/main.php" target="_blank">在线聊天IM</a>
 	</div>
 
 </body>
@@ -595,39 +594,60 @@
 		}
 		xhr.open('get', './move.php?maxID=' + ID);
 		xhr.send(null);
-		if (move_id != max) {
-			if (read_after.indexOf('now') == -1) {
-				read_after = read_after.concat(' now');
-				read_after_id.setAttribute("class",read_after);
-			}
-		}
-		if (move_id <= 0) {
-			if (read_before.indexOf('now') != -1) {
-				read_before = read_before.replace('now','');
-				read_before_id.setAttribute("class",read_before);
-			}
-		}
-		if (move_id >= (max-100)) {
-			if (read_after.indexOf('now') != -1) {
-				read_after = read_after.replace('now','');
-				read_after_id.setAttribute("class",read_after);
-			}
-		}
+		up_lost();
+		down_now();
+		down_lost();
 	}
 
 	read_before_id = document.getElementById("read_before");
 	read_before = read_before_id.getAttribute("class");
 	read_after_id = document.getElementById("read_after");
 	read_after = read_after_id.getAttribute("class");
-	showmsg.onscroll = function () {
-		lazyloadFun();
-		++move;
-		if (move>20) {
+	var up = null;
+
+	function up_now(move){
+		if (move>20 && move_id > 0) {
 			if (read_before.indexOf('now') == -1) {
 				read_before = read_before.concat(' now');
 				read_before_id.setAttribute("class",read_before);
 			}
 		}
+	}
+	function down_now(move){
+		if (move>20 && move_id != (max-100)) {
+			if (read_after.indexOf('now') == -1) {
+				read_after = read_after.concat(' now');
+				read_after_id.setAttribute("class",read_after);
+			}
+		}
+	}
+	function up_lost(temp){
+		temp = temp || false; 
+		if (move_id <= 0 || temp) {
+			if (read_before.indexOf('now') != -1) {
+				read_before = read_before.replace('now','');
+				read_before_id.setAttribute("class",read_before);
+			}
+		}
+	}
+	function down_lost(temp){
+		temp = temp || false; 
+		if (move_id >= (max-100) || temp) {
+			if (read_after.indexOf('now') != -1) {
+				read_after = read_after.replace('now','');
+				read_after_id.setAttribute("class",read_after);
+			}
+		}
+	}
+	showmsg.onscroll = function () {
+		lazyloadFun();
+		up_now(move);
+		down_now(move);
+		if (up) clearTimeout(up);
+		up = setTimeout(()=>{
+			up_lost(true);down_lost(true);
+		}, 15000);
+		move <= 20 ? ++move : move=0;
 	}
 	function lazyloadFun() {
 		n = 0;
