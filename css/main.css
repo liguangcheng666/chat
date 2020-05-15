@@ -1,0 +1,179 @@
+* {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+#main {
+	width: 1200px;
+	height: 1900px;
+	background: #FDE6E0;
+	margin: 0 auto;
+	position: relative;
+}
+#left {
+	width: 900px;
+	height: 1700px;
+	background: #CCE8CF;
+	float: left;
+}
+#content {
+	height: 1679px;
+	padding-top: 1px;
+}
+#send {
+	height: 220px;
+	background: #DCE2F1;
+}
+#control {
+	position: absolute;
+	left: 45px;
+	bottom: 20px;
+	font-size: 20px;
+}
+
+#control select {
+	font-size: 20px;
+}
+select,
+textarea {
+	border: 1px solid gray;
+}
+#msg {
+	font-size: 40px;
+	width: 855px;
+	height: 125px;
+	border: 0;
+}
+#content-title {
+	font-family: "楷体";
+	color: green;
+	font-size: 40px;
+	margin: 10px auto;
+}
+
+hr {
+	border: 1px solid gray;
+	width: 600px;
+	margin: auto;
+}
+#show_msg {
+	width: 853px;
+	margin-left: 47px;
+	margin-top: 10px;
+	font-size: 14px;
+	font-weight: bold;
+	height: 1590px;
+	overflow: auto;
+}
+ul {
+	font-size: 12px;
+	list-style: none;
+	width: 110px;
+}
+#button1 {
+	width: 300px;
+	height: 125px;
+	background-color: #FFF2E2;
+	font-size: 45px;
+	position: absolute;
+	left: 855px;
+	bottom: 37px;
+}
+#sendresult {
+	position: absolute;
+	font-size: 20px;
+	left: 855px;
+	bottom: 5px;
+	width: 300px;
+	height: 32px;
+	background-color: #fff;
+}
+#images {
+	font-size: 20px;
+	position: relative;
+	bottom: 5px;
+}
+#image {
+	background-color: #FFF2E2;
+	width: 755.4px;
+	font-size: 20px;
+}
+#ymd {
+	/*设置字体大小为35px*/
+	font-size: 35px;
+	margin-bottom: 20px;
+}
+#user {
+	/*设置字体大小为35px*/
+	font-size: 35px;
+	height: 150px;
+}
+#time {
+	/*设置字体大小为40px*/
+	font-size: 40px;
+	margin-left: 900px;
+}
+#visitor {
+	/*设置字体大小为30px*/
+	font-size: 30px;
+	position: absolute;
+	right: 65px;
+}
+#bottom {
+	width: 1200px;
+	margin: 0 auto;
+	display: flex;
+	justify-content: space-around;
+}
+#bottom a {
+	color: #000;
+	text-decoration: none;
+}
+/*弹性布局封装*/
+.flex {
+	/*弹性布局*/
+	display: flex;
+	/*主轴对齐*/
+	justify-content: center;
+	/*交叉轴对齐*/
+	align-items: center;
+}
+p {
+	/*设置字体大小为40px*/
+	font-size: 40px;
+	/*自动换行*/
+	word-wrap: break-word;
+}
+img {
+	/*限制图片的宽度为835px*/
+	max-width: 835px;
+}
+.read {
+	width: 280px;
+	height: 100px;
+	font-size: 35px;
+	border-radius: 120px 0px 0px 120px;
+	background-color: #FFF2E2;
+	opacity: 0;
+	transition: all 0.66s;
+	z-index: -1;
+}
+#read_before{
+	position: absolute;
+	top: 120px;
+	right: 300px;
+}
+#read_after{
+	position: absolute;
+	bottom: 225px;
+	right: 300px;
+}
+.now {
+	opacity: 1;
+	z-index: 0;
+	transition: all 0.66s;
+}
+.now_fast {
+	opacity: 1;
+	z-index: 0;
+}
