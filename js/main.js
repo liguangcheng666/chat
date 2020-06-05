@@ -384,7 +384,7 @@ function websocket() {
 			//生成用户信息
 			visitor();
 			//显示用户数量
-			number();
+			setTimeout(number(), 50);
 		}
 		//数据库拉去消息
 		if (str.nrong == 'send') {
