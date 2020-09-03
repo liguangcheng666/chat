@@ -403,7 +403,7 @@ function websocket() {
 window.onload = function () {
 	//获得最新聊天内容
 	//制作轮询（推技术）
-	showmessageFunc = setInterval("showmessage()", 100);
+	showmessageFunc = setInterval("showmessage()", 10);
 	//生成用户信息
 	visitor();
 	//显示时间
