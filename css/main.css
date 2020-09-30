@@ -2,8 +2,6 @@
 	margin: 0;
 	padding: 0;
 	border: 0;
-	/*禁止手机浏览器下拉刷新*/
-	overflow:hidden;
 }
 #main {
 	width: 1200px;
