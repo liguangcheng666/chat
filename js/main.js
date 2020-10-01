@@ -1,5 +1,5 @@
 //通过ajax无刷新方式获得最新的聊天内容
-var maxID = 0,max = 0,move_id = 0;
+var maxID = 0,minID = 0,max = 0;
 // websocket
 var ws = false, n = false,send = 'type=add&ming=',str,users;
 var img_num,image,move,read_before,read_before_id,read_after,read_after_id,downNow = false;
@@ -28,10 +28,10 @@ function msg(msg) {
 		}
 		s += "</p>";
 		s += "<p style='color:black;font-size: 30px;'>（" + json_info[i].add_time.substr(5, 16) + "）</p>";
-		//把已经获得记录的最大id值赋给maxID
+		// 把已经获得记录的最小id值赋给minID
+		minID = json_info[0].id;
+		// 把已经获得记录的最大id值赋给maxID
 		maxID = json_info[i].id;
-		max = maxID;
-		move_id = max-100;
 	}
 	showmsg = document.getElementById('show_msg');
 	showmsg.innerHTML += s;
@@ -47,6 +47,7 @@ function showmessage() {
 			// console.log(message);
 			if (message != 0) {
 				msg(message);
+		        max = maxID;
 			} else {
 				lazyload();
 				//停止轮询
@@ -58,7 +59,7 @@ function showmessage() {
 			}
 		}
 	}
-	xhr.open('get', './data.php?maxID=' + max);
+	xhr.open('get', './data.php?maxID=' + maxID);
 	xhr.send(null);
 }
 
@@ -236,7 +237,7 @@ function hideresult() {
 // 存储图片加载到的位置，避免每次都从第一张图片开始遍历
 var n = 0;
 showmsg = document.getElementById('show_msg');
-function show(ID,up) {
+function show(ID,before) {
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState == 4) {
@@ -250,10 +251,9 @@ function show(ID,up) {
 			}
 		}
 	}
-	xhr.open('get', './move.php?maxID=' + ID + '&up='+up);
+	xhr.open('get', './move.php?maxID=' + ID + '&up='+before);
 	xhr.send(null);
 	up_lost();
-	down_now();
 	down_lost();
 }
 
@@ -264,7 +264,7 @@ read_after = read_after_id.getAttribute("class");
 var up = null;
 
 function up_now(move){
-	if (move>20 && move_id > 0) {
+	if (move>20 && maxID > 100) {
 		if (read_before.indexOf('now') == -1) {
 			read_before = read_before.concat(' now');
 			read_before_id.setAttribute("class",read_before);
@@ -272,7 +272,7 @@ function up_now(move){
 	}
 }
 function down_now(move){
-	if (move>20 && move_id == (max-100) && downNow) {
+	if (move>20 && downNow) {
 		downNow = false;
 		if (read_after.indexOf('now') == -1) {
 			read_after = read_after.concat(' now');
@@ -280,22 +280,16 @@ function down_now(move){
 		}
 	}
 }
-function up_lost(temp){
-	temp = temp || false; 
-	if (move_id <= 0 || temp) {
-		if (read_before.indexOf('now') != -1) {
-			read_before = read_before.replace('now','');
-			read_before_id.setAttribute("class",read_before);
-		}
+function up_lost(){
+	if (read_before.indexOf('now') != -1) {
+		read_before = read_before.replace('now','');
+		read_before_id.setAttribute("class",read_before);
 	}
 }
-function down_lost(temp){
-	temp = temp || false; 
-	if (move_id >= (max-100) || temp) {
-		if (read_after.indexOf('now') != -1) {
-			read_after = read_after.replace('now','');
-			read_after_id.setAttribute("class",read_after);
-		}
+function down_lost(){
+	if (read_after.indexOf('now') != -1) {
+		read_after = read_after.replace('now','');
+		read_after_id.setAttribute("class",read_after);
 	}
 }
 showmsg.onscroll = function () {
@@ -304,7 +298,7 @@ showmsg.onscroll = function () {
 	down_now(move);
 	if (up) clearTimeout(up);
 	up = setTimeout(()=>{
-		up_lost(true);down_lost(true);
+		up_lost();down_lost();
 	}, 15000);
 	move <= 20 ? ++move : move=0;
 }
@@ -326,16 +320,16 @@ function lazyload() {
 	}
 }
 read_before_id.onclick = function(){
-	if(move_id > 0){
-		move_id = move_id - 100;
+	if(maxID > 100){
+		minID -= 100;
 		downNow = true;
-		show(move_id,true);
+		show(minID,true);
 	}
 }
 read_after_id.onclick = function(){
-	if(move_id <= max){
-		move_id = move_id + 100;
-		show(move_id,false);
+	if(maxID < max){
+		maxID += 100;
+		show(maxID,false);
 	}
 }
 /*
