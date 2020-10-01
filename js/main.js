@@ -1,10 +1,10 @@
 //通过ajax无刷新方式获得最新的聊天内容
 var maxID = 0,minID = 0,max = 0;
 // websocket
-var ws = false, n = false,send = 'type=add&ming=',str,users;
-var img_num,image,move,read_before,read_before_id,read_after,read_after_id,downNow = false;
+var ws = false, n = false,once = true,send = 'type=add&ming=',str,users;
+var img_num,image,move,read_before,read_before_id,read_after,read_after_id;
 // showmsg
-var showmsg;
+var showmsg,visitorMsg;
 // socket
 function socket() {
 	var url = 'ws://192.168.0.106:8000';
@@ -47,15 +47,17 @@ function showmessage() {
 			// console.log(message);
 			if (message != 0) {
 				msg(message);
-		        max = maxID;
-			} else {
-				lazyload();
-				//停止轮询
-				clearInterval(showmessageFunc);
-				// 设置websocket参数
-				n = document.getElementById("user").innerText.substring(0, 30);
-				// 启动websocket				
-				websocket();
+                max = maxID;
+                if (once) {
+                	once = false;
+					setTimeout(function(){
+						lazyload();
+						// 设置websocket参数
+						n = document.getElementById("user").innerText.substring(0, 30);
+						// 启动websocket				
+						websocket();
+					}, 500);
+                }
 			}
 		}
 	}
@@ -97,6 +99,11 @@ function insertAtCursor(myField, myValue) {
 	*/
 function visitor() {
 	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState == 4) {
+			visitorMsg = xhr.responseText;
+		}
+	}
 	xhr.open('get', './visitor.php');
 	xhr.send(null);
 }
@@ -245,16 +252,14 @@ function show(ID,before) {
 			if (message != 0) {
 				showmsg.innerHTML = '';
 				msg(message);
-				if (up) {
-					showmsg.scrollTop = 0;
-				}
+				if (before) showmsg.scrollTop = 0;
+				if(minID <= 1) up_lost();
+				if(maxID >= max) down_lost();
 			}
 		}
 	}
-	xhr.open('get', './move.php?maxID=' + ID + '&up='+before);
+	xhr.open('get', './move.php?maxID=' + ID +'&before='+before);
 	xhr.send(null);
-	up_lost();
-	down_lost();
 }
 
 read_before_id = document.getElementById("read_before");
@@ -264,7 +269,7 @@ read_after = read_after_id.getAttribute("class");
 var up = null;
 
 function up_now(move){
-	if (move>20 && maxID > 100) {
+	if (move>20 && minID > 1) {
 		if (read_before.indexOf('now') == -1) {
 			read_before = read_before.concat(' now');
 			read_before_id.setAttribute("class",read_before);
@@ -272,8 +277,7 @@ function up_now(move){
 	}
 }
 function down_now(move){
-	if (move>20 && downNow) {
-		downNow = false;
+	if (move>20 && maxID < max) {
 		if (read_after.indexOf('now') == -1) {
 			read_after = read_after.concat(' now');
 			read_after_id.setAttribute("class",read_after);
@@ -320,15 +324,12 @@ function lazyload() {
 	}
 }
 read_before_id.onclick = function(){
-	if(maxID > 100){
-		minID -= 100;
-		downNow = true;
+	if(minID > 1){
 		show(minID,true);
 	}
 }
 read_after_id.onclick = function(){
 	if(maxID < max){
-		maxID += 100;
 		show(maxID,false);
 	}
 }
@@ -377,12 +378,11 @@ function websocket() {
 			if (tmp) {
 				users.push(arr);
 			}
-			//生成用户信息
-			visitor();
+			if (visitorMsg != "已经记录") visitor();
 			//显示用户数量
 			setTimeout("number()", 50);
 		}
-		//数据库拉去消息
+		//数据库拉取消息
 		if (str.nrong == 'send') {
 			showmessage();
 		}
@@ -398,8 +398,7 @@ function websocket() {
 }
 window.onload = function () {
 	//获得最新聊天内容
-	//制作轮询（推技术）
-	showmessageFunc = setInterval("showmessage()", 500);
+	showmessage();
 	//生成用户信息
 	visitor();
 	//显示时间

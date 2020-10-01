@@ -7,7 +7,7 @@ $maxID = $_GET['maxID'];
 // 创建预处理语句
 $stmt=mysqli_stmt_init($link);
 //编写预处理查询sql语句
-$sql = "select id,username,msg,color,biaoqing,image,add_time from (select * from message order by id desc limit 100) a where id > ? order by id";
+$sql = "select id,username,msg,color,biaoqing,image,add_time from (select id,username,msg,color,biaoqing,image,add_time from message where id > ? order by id desc limit 100) a order by id;";
 if (mysqli_stmt_prepare($stmt,$sql))
 {   
     // 绑定参数
@@ -21,13 +21,9 @@ if (mysqli_stmt_prepare($stmt,$sql))
     while ($result = mysqli_fetch_assoc($query)) {
         $info[] = $result;
     }
-    if ($info) {
-        //通过json格式提供数据给客户端
-        echo json_encode($info,JSON_UNESCAPED_UNICODE);
-    }else{
-        $info = 0;
-        echo json_encode($info);
-    }   
+    if (!$info) $info = 0; 
+    //通过json格式提供数据给客户端
+    echo json_encode($info,JSON_UNESCAPED_UNICODE);
     // 关闭预处理语句
     mysqli_stmt_close($stmt);
 }
