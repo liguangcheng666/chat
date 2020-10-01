@@ -4,7 +4,7 @@
 
 运行地址：http://lgcweb.cn/
 
-备用地址：http://lgc.jxjt.me/
+
 
 项目技术介绍
 
