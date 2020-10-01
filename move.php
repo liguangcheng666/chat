@@ -8,8 +8,12 @@ $before = $_GET['before'];
 // 创建预处理语句
 $stmt=mysqli_stmt_init($GLOBALS['link']);
 //编写预处理查询sql语句
-$before == "true" ? $symbol = "<" : $symbol = ">";
-$sql = "select id,username,msg,color,biaoqing,image,add_time from message where id ".$symbol." ? limit 100";
+if ($before == "true") {
+    $sql = "select id,username,msg,color,biaoqing,image,add_time from (select id,username,msg,color,biaoqing,image,add_time from message where id < ? order by id desc limit 100) a order by id";
+}else{
+    $sql = "select id,username,msg,color,biaoqing,image,add_time from message where id > ? limit 100";
+}
+
 if (mysqli_stmt_prepare($stmt,$sql))
 {   
     // 绑定参数

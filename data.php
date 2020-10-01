@@ -7,7 +7,7 @@ $maxID = $_GET['maxID'];
 // 创建预处理语句
 $stmt=mysqli_stmt_init($link);
 //编写预处理查询sql语句
-$sql = "select id,username,msg,color,biaoqing,image,add_time from (select id,username,msg,color,biaoqing,image,add_time from message where id > ? order by id desc limit 100) a order by id;";
+$sql = "select id,username,msg,color,biaoqing,image,add_time from (select id,username,msg,color,biaoqing,image,add_time from message where id > ? order by id desc limit 100) a order by id";
 if (mysqli_stmt_prepare($stmt,$sql))
 {   
     // 绑定参数
