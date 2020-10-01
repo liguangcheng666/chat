@@ -2,12 +2,12 @@
 var maxID = 0,max = 0,move_id = 0;
 // websocket
 var ws = false, n = false,send = 'type=add&ming=',str,users;
-var img_num,image,move,read_before,read_before_id,read_after,read_after_id;
+var img_num,image,move,read_before,read_before_id,read_after,read_after_id,downNow = false;
 // showmsg
 var showmsg;
 // socket
 function socket() {
-	var url = 'ws://39.105.0.128:8000';
+	var url = 'ws://192.168.0.106:8000';
 	//创建socket，注意URL的格式：ws://ip:端口
 	ws = new WebSocket(url);
 }
@@ -30,6 +30,8 @@ function msg(msg) {
 		s += "<p style='color:black;font-size: 30px;'>（" + json_info[i].add_time.substr(5, 16) + "）</p>";
 		//把已经获得记录的最大id值赋给maxID
 		maxID = json_info[i].id;
+		max = maxID;
+		move_id = max-100;
 	}
 	showmsg = document.getElementById('show_msg');
 	showmsg.innerHTML += s;
@@ -45,7 +47,6 @@ function showmessage() {
 			// console.log(message);
 			if (message != 0) {
 				msg(message);
-				max = maxID;
 			} else {
 				lazyload();
 				//停止轮询
@@ -54,7 +55,6 @@ function showmessage() {
 				n = document.getElementById("user").innerText.substring(0, 30);
 				// 启动websocket				
 				websocket();
-				move_id = max-100;
 			}
 		}
 	}
@@ -250,7 +250,7 @@ function show(ID,up) {
 			}
 		}
 	}
-	xhr.open('get', './move.php?maxID=' + ID);
+	xhr.open('get', './move.php?maxID=' + ID + '&up='+up);
 	xhr.send(null);
 	up_lost();
 	down_now();
@@ -272,7 +272,8 @@ function up_now(move){
 	}
 }
 function down_now(move){
-	if (move>20 && move_id != (max-100)) {
+	if (move>20 && move_id == (max-100) && downNow) {
+		downNow = false;
 		if (read_after.indexOf('now') == -1) {
 			read_after = read_after.concat(' now');
 			read_after_id.setAttribute("class",read_after);
@@ -327,6 +328,7 @@ function lazyload() {
 read_before_id.onclick = function(){
 	if(move_id > 0){
 		move_id = move_id - 100;
+		downNow = true;
 		show(move_id,true);
 	}
 }
