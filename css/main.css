@@ -3,6 +3,9 @@
 	padding: 0;
 	border: 0;
 }
+body {
+	overflow: hidden;
+}
 #main {
 	width: 1200px;
 	height: 1900px;
