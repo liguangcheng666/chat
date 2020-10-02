@@ -11,7 +11,7 @@ $stmt=mysqli_stmt_init($GLOBALS['link']);
 if ($before == "true") {
     $sql = "select id,username,msg,color,biaoqing,image,add_time from (select id,username,msg,color,biaoqing,image,add_time from message where id < ? order by id desc limit 100) a order by id";
 }else{
-    $sql = "select id,username,msg,color,biaoqing,image,add_time from message limit ?,100";
+    $sql = "select id,username,msg,color,biaoqing,image,add_time from message where id > ? limit 100";
 }
 
 if (mysqli_stmt_prepare($stmt,$sql))
