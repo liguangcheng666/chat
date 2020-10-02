@@ -156,7 +156,7 @@ function queryUser() {
 				for (var i = 0; i < 3; i++) {
 					num += Math.floor(Math.random() * 10);
 				}
-				var userName = "匿名者" + num;
+				var userName = "访问者" + num;
 				// 设置cookie
 				setCookie('userName', userName, 24 * 60 * 60);
 				document.getElementById("user").innerHTML = userName;
