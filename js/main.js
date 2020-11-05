@@ -2,7 +2,7 @@
 var maxID = 0,minID = 0,max = 0;
 // websocket
 var ws = false, n = false,once = true,send = 'type=add&ming=',str,users;
-var img_num,image,move,read_before,read_before_id,read_after,read_after_id;
+var img_num,image,move,moveFlag = true,read_before,read_before_id,read_after,read_after_id;
 // showmsg
 var showmsg,visitorMsg;
 // socket
@@ -27,7 +27,7 @@ function msg(msg) {
 			s += "<img src='icons/load.png' data-src='" + img_url + "'>";
 		}
 		s += "</p>";
-		s += "<p style='color:black;font-size: 30px;'>（" + json_info[i].add_time.substr(5, 16) + "）</p>";
+		s += "<p style='color:black;font-size: 30px;'>（" + json_info[i].add_time + "）</p>";
 		// 把已经获得记录的最小id值赋给minID
 		minID = json_info[0].id;
 		// 把已经获得记录的最大id值赋给maxID
@@ -226,7 +226,7 @@ function sendmsg() {
 				if (res == '发送成功') {
 					ws.send('nr=send&key=all');
 				}
-				//3s后使得发表留言的消息消失
+				//3s后使 发送成功 的消息消失
 				setTimeout("hideresult()", 3000);
 			}
 		}
@@ -245,21 +245,31 @@ function hideresult() {
 var n = 0;
 showmsg = document.getElementById('show_msg');
 function show(ID,before) {
-	var xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = function () {
-		if (xhr.readyState == 4) {
-			var message = xhr.responseText;
-			if (message != 0) {
-				showmsg.innerHTML = '';
-				msg(message);
-				if (before) showmsg.scrollTop = 0;
-				if(minID <= 1) up_lost();
-				if(maxID >= max) down_lost();
+	if(moveFlag){
+		moveFlag = false;
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function () {
+			if (xhr.readyState == 4) {
+				moveFlag = true;
+				if(xhr.status == 200 ){
+					var message = xhr.responseText;
+					if (message != 0) {
+						showmsg.innerHTML = '';
+						msg(message);
+						if (before) showmsg.scrollTop = 0;
+						if(minID <= 1) up_lost();
+						if(maxID >= max) down_lost();
+					}
+				}
 			}
 		}
+		xhr.open('get', './move.php?maxID=' + ID +'&before='+before);
+		xhr.send(null);
+	}else{
+		document.getElementById('sendresult').innerHTML = "正在加载";
+		//1.5s后使得 正在加载 的消息消失
+		setTimeout("hideresult()", 1500);
 	}
-	xhr.open('get', './move.php?maxID=' + ID +'&before='+before);
-	xhr.send(null);
 }
 
 read_before_id = document.getElementById("read_before");
