@@ -7,7 +7,7 @@ var img_num,image,move,moveFlag = true,read_before,read_before_id,read_after,rea
 var showmsg,visitorMsg;
 // socket
 function socket() {
-	var url = 'ws://192.168.0.106:8000';
+	var url = 'ws://39.105.0.128:8000';
 	//创建socket，注意URL的格式：ws://ip:端口
 	ws = new WebSocket(url);
 }
@@ -170,6 +170,8 @@ function queryUser() {
 			}
 			document.getElementById("user").innerHTML = user;
 		}
+		//获得最新聊天内容
+		showmessage();
 		//停止
 		clearInterval(queryUserFunc);
 	}
@@ -407,8 +409,6 @@ function websocket() {
 	}
 }
 window.onload = function () {
-	//获得最新聊天内容
-	showmessage();
 	//生成用户信息
 	visitor();
 	//显示时间
