@@ -251,6 +251,8 @@ function show(ID,before) {
 		moveFlag = false;
 		// 请求资源的时候停止图片加载
 		window.stop();
+		// 请求资源的时候替换图片为默认图片
+		loadImg();
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState == 4) {
@@ -325,8 +327,8 @@ function lazyloadFun() {
 	lazyload();
 }
 function lazyload() {
-	img_num = document.getElementsByTagName('img').length;
-	image = document.getElementsByTagName("img");
+	image = document.getElementById('show_msg').getElementsByTagName('img');
+	img_num = image.length;
 	for (var i = n; i < img_num; i++) {
 		var top = image[i].getBoundingClientRect().top;
 		if (top > 100) {
@@ -335,6 +337,13 @@ function lazyload() {
 			}
 		}
 		n = i + 1;
+	}
+}
+function loadImg(){
+	image = document.getElementById('show_msg').getElementsByTagName('img');
+	img_num = image.length;
+	for(var i = 0;i < img_num;i++){
+		image[i].src = "icons/load.png";
 	}
 }
 read_before_id.onclick = function(){
