@@ -2,10 +2,13 @@
 // 连接数据库、设置字符集
 include 'config.php';if (!isset($_COOKIE['sender']) && empty($_COOKIE['sender'])) {
 	$IP = $_SERVER["REMOTE_ADDR"];//获取IP并保存到变量IP中
-	$url = 'http://ip-api.com/json/'.$IP.'?lang=zh-CN';
-	$str = file_get_contents($url);
-	$ipinfo=(array)json_decode($str);
-	$address = $ipinfo['city'];
+	$IP = "61.187.187.181";
+	$ipInfo = file_get_contents("http://ip.ws.126.net/ipquery?ip=".$IP);
+	//把GBK编码转换为UTF8
+	$ipInfo=iconv("GBK", "UTF-8", $ipInfo);
+	$ipInfo = strstr($ipInfo,'lc="');
+	$ipInfo = substr($ipInfo,4);
+	$address = strstr($ipInfo,'"',true);
 	$sender = $address."&nbsp;".$IP;
 	setcookie('sender',$sender,time()+30*24*60*60);
 	exit();
