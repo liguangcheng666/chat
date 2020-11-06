@@ -249,6 +249,8 @@ showmsg = document.getElementById('show_msg');
 function show(ID,before) {
 	if(moveFlag){
 		moveFlag = false;
+		// 请求资源的时候停止图片加载
+		window.stop();
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState == 4) {
