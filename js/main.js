@@ -53,7 +53,7 @@ function showmessage() {
 					setTimeout(function(){
 						lazyload();
 						// 设置websocket参数
-						n = document.getElementById("user").innerText.substring(0, 30);
+						n = document.getElementById("userName").innerText.substring(0, 30);
 						// 启动websocket				
 						websocket();
 					}, 500);
@@ -159,7 +159,7 @@ function queryUser() {
 				var userName = "访问者" + num;
 				// 设置cookie
 				setCookie('userName', userName, 24 * 60 * 60);
-				document.getElementById("user").innerHTML = userName;
+				document.getElementById("userName").innerHTML = userName;
 			}
 		} else {
 			var num = userName + 9;
@@ -168,7 +168,7 @@ function queryUser() {
 			if (end + 1) {
 				var user = user.slice(0, end);
 			}
-			document.getElementById("user").innerHTML = user;
+			document.getElementById("userName").innerHTML = user;
 		}
 		//获得最新聊天内容
 		showmessage();
@@ -179,16 +179,16 @@ function queryUser() {
 /*
 	修改网名
  */
-var btn = document.getElementById('user');
+var btn = document.getElementById('userName');
 btn.onclick = function () {
-	var user = document.getElementById("user").innerText;
+	var user = document.getElementById("userName").innerText;
 	var userName = prompt("修改您的昵称", user);
 	if (userName) {
 		// 限制网名长度
 		userName = userName.substring(0, 30);
 		// 设置cookie
 		setCookie('userName', userName, 30 * 24 * 60 * 60);
-		document.getElementById("user").innerHTML = userName;
+		document.getElementById("userName").innerHTML = userName;
 	}
 }
 /*
