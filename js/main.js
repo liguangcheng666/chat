@@ -7,7 +7,7 @@ var img_num,image,move,moveFlag = true;
 var showmsg,visitorMsg;
 // socket
 function socket() {
-	var url = 'ws://192.168.0.106:8001';
+	var url = 'ws://192.168.43.225:8001';
 	//创建socket，注意URL的格式：ws://ip:端口
 	ws = new WebSocket(url);
 }
@@ -235,6 +235,7 @@ function sendmsg() {
 		xhr.open('post', './send.php');
 		xhr.send(fd);
 	}
+	document.getElementById('msg').focus();
 }
 //使发表留言的标志信息消失
 function hideresult() {
