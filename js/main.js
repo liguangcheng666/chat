@@ -2,12 +2,12 @@
 var maxID = 0,minID = 0,max = 0;
 // websocket
 var ws = false, n = false,once = true,send = 'type=add&ming=',str,users;
-var img_num,image,move,moveFlag = true,read_before,read_before_id,read_after,read_after_id;
+var img_num,image,move,moveFlag = true;
 // showmsg
 var showmsg,visitorMsg;
 // socket
 function socket() {
-	var url = 'ws://39.105.0.128:8000';
+	var url = 'ws://192.168.0.106:8001';
 	//创建socket，注意URL的格式：ws://ip:端口
 	ws = new WebSocket(url);
 }
@@ -18,7 +18,7 @@ function msg(msg) {
 	//遍历json_info的数组，把内容的信息与页面内容做结合
 	var s = "";
 	for (var i = 0; i < json_info.length; i++) {
-		s += "<p style='color:" + json_info[i].color + "'>";
+		s += "<p class='large' style='color:" + json_info[i].color + "'>";
 		s += json_info[i].username + "&nbsp;";
 		s += json_info[i].biaoqing + "&nbsp;:&nbsp;&nbsp;" + json_info[i].msg;
 		if (json_info[i].image) {
@@ -27,7 +27,7 @@ function msg(msg) {
 			s += "<img src='icons/load.png' data-src='" + img_url + "'>";
 		}
 		s += "</p>";
-		s += "<p style='color:black;font-size: 30px;'>（" + json_info[i].add_time + "）</p>";
+		s += "<p class='small' style='color:black;font-size: 15px;'>（" + json_info[i].add_time + "）</p>";
 		// 把已经获得记录的最小id值赋给minID
 		minID = json_info[0].id;
 		// 把已经获得记录的最大id值赋给maxID
@@ -240,11 +240,6 @@ function sendmsg() {
 function hideresult() {
 	document.getElementById('sendresult').innerHTML = "";
 }
-/*
-    lazyload
- */
-// 存储图片加载到的位置，避免每次都从第一张图片开始遍历
-var n = 0;
 showmsg = document.getElementById('show_msg');
 function show(ID,before) {
 	if(moveFlag){
@@ -278,40 +273,32 @@ function show(ID,before) {
 	}
 }
 
-read_before_id = document.getElementById("read_before");
-read_before = read_before_id.getAttribute("class");
-read_after_id = document.getElementById("read_after");
-read_after = read_after_id.getAttribute("class");
-var up = null;
-
 function up_now(move){
 	if (move>20 && minID > 1) {
-		if (read_before.indexOf('now') == -1) {
-			read_before = read_before.concat(' now');
-			read_before_id.setAttribute("class",read_before);
+		if (read_before.getAttribute("class").indexOf('now') == -1) {
+			read_before.classList.add('now');
 		}
 	}
 }
 function down_now(move){
 	if (move>20 && maxID < max) {
-		if (read_after.indexOf('now') == -1) {
-			read_after = read_after.concat(' now');
-			read_after_id.setAttribute("class",read_after);
+		if (read_after.getAttribute("class").indexOf('now') == -1) {
+			read_after.classList.add('now');
 		}
 	}
 }
 function up_lost(){
-	if (read_before.indexOf('now') != -1) {
-		read_before = read_before.replace('now','');
-		read_before_id.setAttribute("class",read_before);
+	if (read_before.getAttribute("class").indexOf('now') != -1) {
+		read_before.classList.remove('now');
 	}
 }
 function down_lost(){
-	if (read_after.indexOf('now') != -1) {
-		read_after = read_after.replace('now','');
-		read_after_id.setAttribute("class",read_after);
+	if (read_after.getAttribute("class").indexOf('now') != -1) {
+		read_after.classList.remove('now');
 	}
 }
+
+var up = null;
 showmsg.onscroll = function () {
 	lazyloadFun();
 	up_now(move);
@@ -326,12 +313,17 @@ function lazyloadFun() {
 	n = 0;
 	lazyload();
 }
+/*
+    lazyload
+ */
+// 存储图片加载到的位置，避免每次都从第一张图片开始遍历
+var n = 0;
 function lazyload() {
 	image = document.getElementById('show_msg').getElementsByTagName('img');
 	img_num = image.length;
 	for (var i = n; i < img_num; i++) {
 		var top = image[i].getBoundingClientRect().top;
-		if (top > 100) {
+		if (top > 0 && top < 2000) {
 			if (image[i].getAttribute("src") == "icons/load.png") {
 				image[i].src = image[i].getAttribute("data-src");
 			}
@@ -346,15 +338,33 @@ function loadImg(){
 		image[i].src = "icons/load.png";
 	}
 }
-read_before_id.onclick = function(){
+read_before.onclick = function(){
 	if(minID > 1){
 		show(minID,true);
 	}
 }
-read_after_id.onclick = function(){
+read_after.onclick = function(){
 	if(maxID < max){
 		show(maxID,false);
 	}
+}
+/*
+	移动端布局
+*/
+list.onclick = function(){
+	up_lost();down_lost();
+	left.classList.add("right-none");
+	list.classList.add("right-none");
+	right.classList.add("right-block");
+	right.classList.add("right-width");
+	room.classList.add("right-block");
+}
+room.onclick = function(){
+	left.classList.remove("right-none");
+	list.classList.remove("right-none");
+	right.classList.remove("right-block");
+	right.classList.remove("right-width");
+	room.classList.remove("right-block");
 }
 /*
     WebSocket
@@ -383,13 +393,13 @@ function websocket() {
 		for (var i = 0; i < users.length; i++) {
 			if (typeof (str.nrong) != 'undefined' && users[i]['code'] == str.nrong && users[i]['name'] != null) {
 				//插入用户退出提示语
-				var s = "<p style='color:#006400;font-size:35px;text-align:center;' class='flex'>" + users[i]['name'] + " 退出 " + str.time + "</p>";
+				var s = "<p class='small' style='color:#006400;font-size:15px;;text-align:center;'>" + users[i]['name'] + " 退出 " + str.time + "</p>";
 				showmsg.innerHTML += s;
 			}
 		}
 		if (typeof (str.name) != 'undefined') {
 			//插入用户加入提示语
-			var s = "<p style='color:#D2691E;font-size:35px;text-align:center;' class='flex'>欢迎 " + str.name + " 加入 " + str.time + "</p>";
+			var s = "<p class='small' style='color:#D2691E;font-size:15px;text-align:center;'>欢迎 " + str.name + " 加入 " + str.time + "</p>";
 			showmsg.innerHTML += s;
 			var arr = { 'code': str.code, 'name': str.name };
 			let tmp = true;

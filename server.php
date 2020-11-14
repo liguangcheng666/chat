@@ -3,7 +3,7 @@ error_reporting(0);//禁用错误报告
 ob_implicit_flush();
  
 //地址与接口，即创建socket时需要服务器的IP和端口
-$sk=new Sock('192.168.0.106',8000);
+$sk=new Sock('0.0.0.0',8001);
  
 //对创建的socket循环进行监听，处理数据
 $sk->run();

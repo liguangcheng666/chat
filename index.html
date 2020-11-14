@@ -3,7 +3,9 @@
 
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=1200,user-scalable=0" />
+	<meta name="keywords" content="网络聊天室,天气查看">
+	<meta name="description" content="网络聊天，查看天气，电影网站导航">
+	<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width">
 	<title>聊天室</title>
 	<link rel="icon" href="icons/大象.ico" type="images/x-ico" />
 	<link rel="stylesheet" type="text/css" href="css/main.css">
@@ -12,13 +14,12 @@
 	<div id="main">
 		<div id="left">
 			<div id="content">
-				<p id="content-title" class="flex">聊天室</p>
-				<hr />
+				<h1 id="content-title">聊天室</h1>
 				<div id="show_msg"></div>
 			</div>
 			<div id="send">
 				<form>
-					<div id="control">
+					<div id="textColor">
 						颜色：
 						<select name="color">
 							<option value="">- - - - - -</option>
@@ -76,6 +77,8 @@
 							<option value="(￣ε(#￣)">(￣ε(#￣)</option>
 							<option value="|*｡´Д｀|┛βyёβyё♪">|*｡´Д｀|┛βyёβyё♪</option>
 						</select>
+					</div>
+					<div id="mood">
 						心情：
 						<select name="biaoqing">
 							<option value="">- - - - - -</option>
@@ -117,45 +120,44 @@
 							<option value="很诧异">很诧异</option>
 							<option value="依依不舍">依依不舍</option>
 						</select>
-						<br />
+					</div>
+					<div id="sendMsg">
 						<textarea id="msg" name="msg" autofocus="autofocus"></textarea>
 						<input type="button" id="button1" value="发送消息" onclick="sendmsg()" />
+					</div>
+					<div id="sendBottom">
+						<div id="images">
+							<div>上传图片：</div>
+							<input type="file" id="image" name="image" accept="image/*" />
+						</div>
 						<span id="sendresult" class='flex'></span>
-						<div id="images">上传图片：<input type="file" id="image" name="image" accept="image/*" /></div>
 					</div>
 				</form>
-
 			</div>
 		</div>
-		<h2 id="user" class="flex"></h2>
-		<h3 id="ymd" class="flex"></h3>
-		<div id="weather">
-			<iframe allowtransparency="true" frameborder="0" width="300" height="460" scrolling="no"
-				src="//tianqi.2345.com/plugin/widget/index.htm?s=2&z=1&t=1&v=1&d=5&bd=0&k=&f=&ltf=009944&htf=cc0000&q=1&e=1&a=1&c=54511&w=300&h=500&align=center"></iframe>
-			<iframe src="https://music.163.com/outchain/player?type=0&amp;id=865772037&amp;auto=0" width="300"
-				height="850" frameborder="0" marginwidth="0" marginheight="0"></iframe>
-		</div>
-		<div id="time" class="flex">
+		<div id="right">
+			<h2 id="user"></h2>
+			<h3 id="ymd"></h3>
+			<div id="weather">
+				<h2>今日天气</h2>
+				<iframe src="//tianqi.2345.com/plugin/widget/index.htm?s=2&z=1&t=1&v=1&d=5&bd=0&k=&f=&ltf=009944&htf=cc0000&q=1&e=1&a=1&c=54511&w=300&h=500&align=center" frameborder="0" marginwidth="0" marginheight="0"></iframe>
+			</div>
 			<h3 id="myTimer"></h3>
+			<div id="visitor">
+				今日访客：<span id="number"></span>
+			</div>
 		</div>
-		<br>
-		<div id="visitor">
-			今日访客：<span id="number"></span>
-		</div>
-		<div id="read_before" class="read flex">阅读之前消息</div>
-		<div id="read_after"  class="read flex">阅读之后消息</div>
 	</div>
+	<div id="read_before" class="read">阅读之前消息</div>
+	<div id="read_after"  class="read">阅读之后消息</div>
+	<div id="room" class="swap">＜</div>
+	<div id="list" class="swap">≡</div>
 	<div id="bottom">
-		<a href="http://www.beian.miit.gov.cn" target="_blank">【湘ICP备20002944号】</a>
-		<a href="realmName/lgcweb.cn.html" target="_blank">注册信息（2020-2030）</a>
-		<a href="mqqwpa://im/chat?chat_type=wpa&uin=1042561833" target="_blank">手机QQ</a>
-		<a href="http://wpa.qq.com/msgrd?v=3&uin=1042561833&site=qq&menu=yes" target="_blank">电脑QQ</a>
-		<a href="https://github.com/liguangcheng666/chat" target="_blank">GitHub</a>
-		<a href="https://gitee.com/clig/Chat/" target="_blank">码云</a>
-		<a href="https://clig.gitee.io/blog/" target="_blank">Clig</a>
+		<a href="https://www.pianku.tv" target="_blank">片库</a>
+		<a href="https://www.ygdy8.net" target="_blank">阳光电影</a>
+		<a href="https://gitee.com/clig/Chat" target="_blank">码云</a>
+		<a href="https://clig.gitee.io/blog" target="_blank">Clig</a>
 	</div>
-
+	<script type="text/javascript" src="js/main.js"></script>
 </body>
-
 </html>
-<script type="text/javascript" src="js/main.js"></script>

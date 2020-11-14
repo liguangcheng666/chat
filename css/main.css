@@ -1,182 +1,300 @@
-* {
+@charset "utf-8";
+html, body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
 	margin: 0;
-	padding: 0;
-	border: 0;
-}
-body {
 	overflow: hidden;
 }
-#main {
-	width: 1200px;
-	height: 1900px;
-	background: #FDE6E0;
-	margin: 0 auto;
+#main{
+	display: flex;
+	flex-direction: row;
 	position: relative;
 }
-#left {
-	width: 900px;
-	height: 1700px;
-	background: #CCE8CF;
-	float: left;
+#left{
+	width: 70%;
+	height: 90%;
+    position: relative;
 }
-#content {
-	height: 1679px;
-	padding-top: 1px;
+#content{
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 70%;
+	height: 7%;
+	background-color: #FFF2E2;
+}
+#content-title{
+    font-family: "楷体";
+}
+#show_msg{
+	font-weight: bold;
+	padding: 0 10px;
+    overflow-y: scroll;
+    width: 69%;
+    height: 71.3%;
+    position: fixed;
+    top: 6.8%;
+    left: 0;
+    background-color: #EAEAEF;
 }
 #send {
-	height: 220px;
-	background: #DCE2F1;
-}
-#control {
-	position: absolute;
-	left: 45px;
-	bottom: 20px;
-	font-size: 20px;
-}
-
-#control select {
-	font-size: 20px;
-}
-select,
-textarea {
-	border: 1px solid gray;
-}
-#msg {
-	font-size: 40px;
-	width: 855px;
-	height: 125px;
-	border: 0;
-}
-#content-title {
-	font-family: "楷体";
-	color: green;
-	font-size: 40px;
-	margin: 10px auto;
-}
-
-hr {
-	border: 1px solid gray;
-	width: 600px;
-	margin: auto;
-}
-#show_msg {
-	width: 853px;
-	margin-left: 47px;
-	margin-top: 10px;
-	font-size: 14px;
-	font-weight: bold;
-	height: 1590px;
-	overflow: auto;
-}
-ul {
-	font-size: 12px;
-	list-style: none;
-	width: 110px;
-}
-#button1 {
-	width: 300px;
-	height: 125px;
-	background-color: #FFF2E2;
-	font-size: 45px;
-	position: absolute;
-	left: 855px;
-	bottom: 37px;
-}
-#sendresult {
-	position: absolute;
-	font-size: 20px;
-	left: 855px;
-	bottom: 5px;
-	width: 300px;
-	height: 32px;
-	background-color: #fff;
-}
-#images {
-	font-size: 20px;
-	position: relative;
-	bottom: 5px;
-}
-#image {
-	background-color: #FFF2E2;
-	width: 755.4px;
-	font-size: 20px;
-}
-#ymd {
-	/*设置字体大小为35px*/
-	font-size: 35px;
-	margin-bottom: 20px;
-}
-#user {
-	/*设置字体大小为35px*/
-	font-size: 35px;
-	height: 150px;
-}
-#time {
-	/*设置字体大小为40px*/
-	font-size: 40px;
-	margin-left: 900px;
-}
-#visitor {
-	/*设置字体大小为30px*/
-	font-size: 30px;
-	position: absolute;
-	right: 65px;
-}
-#bottom {
-	width: 1200px;
-	margin: 0 auto;
+    background: #DCE2F1;
+    width: 70%;
+	height: 15.5%;
+    position: fixed;
+    bottom: 6.4%;
+	left: 0;
 	display: flex;
-	justify-content: space-around;
-}
-#bottom a {
-	color: #000;
-	text-decoration: none;
-}
-/*弹性布局封装*/
-.flex {
-	/*弹性布局*/
-	display: flex;
-	/*主轴对齐*/
 	justify-content: center;
-	/*交叉轴对齐*/
 	align-items: center;
 }
-p {
-	/*设置字体大小为40px*/
-	font-size: 40px;
-	/*自动换行*/
-	word-wrap: break-word;
+form{
+	width: 95%;
 }
-img {
-	/*限制图片的宽度为835px*/
-	max-width: 835px;
+#sendMsg,#sendBottom{
+	display: flex;
+	flex-direction: row;
+}
+#msg{
+	width:80%;
+	height:60px;
+}
+#images {
+	width: 80%;
+	display: -webkit-inline-box;
+	background-color: #CCE8CF;
+}
+#images > div {
+	background-color: #DCE2F1;
+}
+#image {
+    background-color: #FFF2E2;
+}
+#textColor{
+	display: -webkit-inline-box;
+}
+#biaoqing{
+	width: 30%;
+}
+#mood{
+	display: inline;
+}
+#button1 {
+    width: 20%;
+    background-color: #FFF2E2;
+}
+#sendresult {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+    width: 20%;
+    background-color: #fff;
+}
+#room,#list{
+	display: none;
 }
 .read {
-	width: 280px;
-	height: 100px;
-	font-size: 35px;
+	width: 150px;
+	height: 50px;
+	font-size: 20px;
 	border-radius: 120px 0px 0px 120px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	background-color: #FFF2E2;
-	opacity: 0;
 	transition: all 0.66s;
 	z-index: -1;
+	opacity: 0;
 }
 #read_before{
-	position: absolute;
-	top: 120px;
-	right: 300px;
+	position: fixed;
+    top: 15%;
+    right: 30%;
 }
 #read_after{
-	position: absolute;
-	bottom: 225px;
-	right: 300px;
+	position: fixed;
+    bottom: 35%;
+    right: 30%;
 }
 .now {
 	opacity: 1;
 	z-index: 0;
 	transition: all 0.66s;
 }
-.now_fast {
-	opacity: 1;
-	z-index: 0;
+#right{
+	width: 30%;
+	height: 93.6%;
+	position: fixed;
+	right: 0;
+	top: 0;
+	text-align: center;
+	background-color: #FDE6E0;
+}
+#user,#ymd,#weather>h2,#myTimer,#visitor{
+	margin: 0 auto;
+}
+#user{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 10%;
+}
+#ymd{
+	height: 5%;
+}
+#weather>h2{
+	height: 5%;
+}
+iframe{
+	position: fixed;
+	right: 0;
+	width: 30%;
+	height: 60%;
+}
+#myTimer{
+	width: 100%;
+	position: absolute;
+	bottom: 10%;
+}
+#visitor{
+	width: 100%;
+	position: absolute;
+	bottom: 5%;
+}
+#download > a{
+	text-decoration: none;
+}
+#bottom {    
+	position: fixed;
+    bottom:0;
+	width: 100%;
+	height: 6.4%;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+#bottom a {
+	color: #000;
+	text-decoration: none;
+}
+#show_msg p{
+	margin:0 auto;
+	max-width: 90%;
+}
+p{
+	font-size: 20px;
+	/*自动换行*/
+	word-wrap: break-word;
+}
+img{
+	max-width: 95%;
+}
+@media screen and (max-width: 500px){
+	#mood{
+		display: none;
+	}
+	.read {
+		width: 105px;
+		height: 35px;
+		font-size: 15px;
+		border-radius: 120px 0px 0px 120px;
+	}
+	.swap{
+		font-size: 45px;
+		font-weight: bolder;
+		color:#FFFFFF;
+		position: absolute;
+		top: -1%;
+		right: 5%;
+	}
+	#room{
+		font-size: 35px;
+	}
+	#list{
+		display: block;
+	}
+	#left{
+		width: 100%;
+	}
+	#content{
+		width: 100%;
+	}
+	#content-title{
+		font-size: 20px;
+	}
+	#show_msg{
+		top: 6.7%;
+		width: 100%;
+		height: 66.9%;
+	}
+	#show_msg .small{
+		font-size: 10px !important;
+	}
+	#show_msg .large{
+		font-size: 15px !important;
+	}
+	#send{
+		width: 100%;
+		height: 20%;
+	}
+	#right{
+		display: none;
+	}
+	iframe{
+		width: 100%;
+		height: 60%;
+	}
+	#read_before{
+		position: fixed;
+		top: 10%;
+    	right: 0;
+	}
+	#read_after{
+		position: fixed;
+		bottom: 40%;
+		right: 0;
+	}
+
+	.right-none{
+		display: none !important;
+	}
+
+	.right-block{
+		display: block !important;
+	}
+
+	.right-width{
+		width: 100% !important;
+	}
+
+	/* #left,#list{
+		display: none;
+	}
+	#right{
+		display: block;
+		width: 100%;
+	}
+	#room{
+		display: block;
+	} */
+}
+@media screen and (max-width: 500px) and (max-height:500px){
+	#left,#right {
+    	height: 100%;
+	}
+	#show_msg {
+		height: 58.3%;
+	}
+	#send {
+		width: 100%;
+		height: 35%;
+		bottom: 0;
+	}
+	#bottom{
+		display: none;
+	}
 }
